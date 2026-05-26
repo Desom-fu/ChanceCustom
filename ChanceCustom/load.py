@@ -1,21 +1,17 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   load.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
-
-import OlivOS
-import ChanceCustom
-
 import os
 import json
 import copy
@@ -55,7 +51,6 @@ def initEmptyCustomData():
 
 
 def initCheckCustomData():
-    global dictCustomData
     if 'data' not in dictCustomData:
         initEmptyCustomData()
     if 'dataVersion' not in dictCustomData:
@@ -63,7 +58,6 @@ def initCheckCustomData():
 
 
 def fixCheckCustomData():
-    global dictCustomData
     if 'dataVersion' not in dictCustomData:
         dictCustomData['dataVersion'] = dataVersion
     if dictCustomData['dataVersion'] < dataVersion:
@@ -86,11 +80,11 @@ def initCustomData(botInfo=None):
     try:
         with open(dictCustomData_path, 'r', encoding='utf-8') as dictCustomData_f:
             dictCustomData = json.loads(dictCustomData_f.read())
-    except:
+    except Exception:
         initEmptyCustomData()
     fixCheckCustomData()
     tmp_hash_list = ['unity']
-    if botInfo != None:
+    if botInfo is not None:
         tmp_hash_list.extend(list(botInfo.keys()))
     for tmp_hash_list_this in tmp_hash_list:
         if tmp_hash_list_this not in dictCustomData['data']:
@@ -132,7 +126,6 @@ def getCustomDataSortKeyList(data, reverse=False):
 
 
 def saveCustomData():
-    global dictCustomData
     releaseDir('./plugin')
     releaseDir('./plugin/data')
     releaseDir('./plugin/data/ChanceCustom')

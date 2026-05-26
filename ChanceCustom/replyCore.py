@@ -1,15 +1,15 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyCore.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
@@ -27,7 +27,6 @@ def unity_reply(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow, 
 
 
 def getValDictUnity(valDict: dict):
-    global globalValDict
     if 'funcValRawGData' in globalValDict:
         valDict['funcValRawGData'] = globalValDict['funcValRawGData'].copy()
     if 'valRawGData' in globalValDict:
@@ -43,7 +42,6 @@ def getValDictUnity(valDict: dict):
 
 
 def setValDictUnity(valDict: dict):
-    global globalValDict
     if 'funcValRawGData' in valDict:
         globalValDict['funcValRawGData'] = valDict['funcValRawGData'].copy()
     if 'valRawGData' in valDict:
@@ -88,7 +86,7 @@ def getValDict(valDict: dict, plugin_event: OlivOS.API.Event, Proc: OlivOS.plugi
         valDict['innerVal']['host_id'] = plugin_event.data.host_id
         valDict['innerVal']['group_id'] = plugin_event.data.group_id
         valDict['innerVal']['hag_id'] = plugin_event.data.group_id
-        if plugin_event.data.host_id != None:
+        if plugin_event.data.host_id is not None:
             valDict['innerVal']['hag_id'] = '%s|%s' % (str(plugin_event.data.host_id), str(plugin_event.data.group_id))
         valDict['innerVal']['user_id'] = plugin_event.data.user_id
         valDict['innerVal']['chat_id'] = 'GROUP:%s' % str(valDict['innerVal']['hag_id'])
@@ -135,7 +133,7 @@ def getValDict(valDict: dict, plugin_event: OlivOS.API.Event, Proc: OlivOS.plugi
     valDict['defaultVal']['发送者昵称'] = ''
     if event_name in ['poke_group', 'poke_private']:
         resObj = plugin_event.get_stranger_info(plugin_event.data.user_id)
-        if resObj != None and resObj['active']:
+        if resObj is not None and resObj['active']:
             valDict['defaultVal']['发送者昵称'] = resObj['data']['name']
     elif event_name in ['init']:
         pass
@@ -151,7 +149,6 @@ def getValDict(valDict: dict, plugin_event: OlivOS.API.Event, Proc: OlivOS.plugi
 
 
 def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow, event_name: str):
-    global globalValDict
     tmp_dictCustomData = ChanceCustom.load.dictCustomData
     tmp_hash_list = ['unity', plugin_event.bot_info.hash]
     tmp_message = ''
@@ -204,7 +201,7 @@ def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow
                 import OlivaDiceCore
 
                 redirected_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(tmp_hash_list_this)
-            except:
+            except Exception:
                 redirected_hash = tmp_hash_list_this
         else:
             redirected_hash = tmp_hash_list_this
@@ -241,7 +238,7 @@ def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow
                         res_re = None
                         if tmp_message == '[初始化]':
                             res_re = re.match(r'^\[初始化.*\]$', key_this)
-                        if res_re != None:
+                        if res_re is not None:
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                             for tmp_value_this in tmp_value.split('[分页]'):
                                 msg = ChanceCustom.replyReg.replyValueRegTotal(tmp_value_this, valDict)
@@ -271,9 +268,9 @@ def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow
                             for res_re_list_this in res_re_list:
                                 key = '内容%s' % str(count)
                                 value = ''
-                                if type(res_re_list_this) == str:
+                                if type(res_re_list_this) is str:
                                     value = res_re_list_this
-                                elif res_re_list_this != None:
+                                elif res_re_list_this is not None:
                                     value = ''
                                 valDict[key] = codeEscape(value)
                                 count += 1
@@ -304,15 +301,15 @@ def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow
                             break
                     elif 'reg' == tmp_dictCustomData_this[key_this]['matchType']:
                         res_re = re.match('^%s$' % tmp_dictCustomData_this[key_this]['key'], tmp_message)
-                        if res_re != None:
+                        if res_re is not None:
                             res_re_list = res_re.groups()
                             count = 1
                             for res_re_list_this in res_re_list:
                                 key = '内容%s' % str(count)
                                 value = ''
-                                if type(res_re_list_this) == str:
+                                if type(res_re_list_this) is str:
                                     value = res_re_list_this
-                                elif res_re_list_this != None:
+                                elif res_re_list_this is not None:
                                     value = ''
                                 valDict[key] = codeEscape(value)
                                 count += 1
@@ -328,7 +325,7 @@ def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow
                                         reply(plugin_event, msg)
                             break
 
-    if bot_hash_last != None and valDict['innerVal']['replaceReply'] != None:
+    if bot_hash_last is not None and valDict['innerVal']['replaceReply'] is not None:
         tmp_value = random.choice(valDict['innerVal']['replaceReply'].split('*'))
         for tmp_value_this in tmp_value.split('[分页]'):
             msg = ChanceCustom.replyReg.replyValueRegTotal(tmp_value_this, valDict)

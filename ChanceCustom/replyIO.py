@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyIO.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 
 import re
@@ -43,16 +42,16 @@ def iniSetFunTemp():
             ini = configparser.ConfigParser()
             ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '配置节', None, groupDict, valDict)
-            if None != resDict['配置节']:
+            if None is not resDict['配置节']:
                 ChanceCustom.replyBase.getCharRegTotal(resDict, '配置项', None, groupDict, valDict)
                 ChanceCustom.replyBase.getCharRegTotal(resDict, '写入值', None, groupDict, valDict)
                 try:
                     releasePath(resDict['文件路径'])
                     ini.read(resDict['文件路径'], encoding='utf-8')
-                    if None != resDict['配置项']:
+                    if None is not resDict['配置项']:
                         if resDict['配置节'] not in ini.sections():
                             ini.add_section(resDict['配置节'])
-                        if None != resDict['写入值']:
+                        if None is not resDict['写入值']:
                             ini.set(resDict['配置节'], resDict['配置项'], resDict['写入值'])
                         else:
                             ini.remove_option(resDict['配置节'], resDict['配置项'])
@@ -60,7 +59,7 @@ def iniSetFunTemp():
                         ini.remove_section(resDict['配置节'])
                     with open(resDict['文件路径'], 'w', encoding='utf-8') as ini_f:
                         ini.write(ini_f, space_around_delimiters=False)
-                except:
+                except Exception:
                     pass
             return res
 
@@ -83,7 +82,7 @@ def iniGetFunTemp():
             try:
                 ini.read(resDict['文件路径'], encoding='utf-8')
                 res = ini.get(resDict['配置节'], resDict['配置项'], fallback=resDict['默认值'])
-            except:
+            except Exception:
                 res = resDict['默认值']
             return res
 
@@ -103,10 +102,10 @@ def iniGetOptionsFunTemp():
             ChanceCustom.replyBase.getCharRegTotal(resDict, '配置节', None, groupDict, valDict)
             try:
                 ini.read(resDict['文件路径'], encoding='utf-8')
-                if None != resDict['配置节']:
+                if None is not resDict['配置节']:
                     optionList = ini.items(resDict['配置节'])
                     res = '\n'.join([('%s=%s' % optionThis) for optionThis in optionList if 2 == len(optionThis)])
-            except:
+            except Exception:
                 pass
             return res
 
@@ -126,7 +125,7 @@ def iniGetSectionFunTemp():
             try:
                 ini.read(resDict['文件路径'], encoding='utf-8')
                 res = '\n'.join(ini.sections())
-            except:
+            except Exception:
                 pass
             return res
 
@@ -145,7 +144,7 @@ def fileReadFunTemp():
             try:
                 with open(resDict['文件路径'], 'r', encoding='utf-8') as file_f:
                     res = file_f.read()
-            except:
+            except Exception:
                 pass
             return res
 
@@ -166,7 +165,7 @@ def fileWriteFunTemp():
                 releasePath(resDict['文件路径'])
                 with open(resDict['文件路径'], 'w', encoding='utf-8') as file_f:
                     file_f.write(resDict['欲写内容'])
-            except:
+            except Exception:
                 pass
             return res
 

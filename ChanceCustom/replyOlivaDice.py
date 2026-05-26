@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyOlivaDice.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 
 import re
@@ -49,7 +48,7 @@ def drawFunTemp():
                         flag_need_give_back=resDict['是否放回'],
                         plugin_event=plugin_event,
                     )
-                    if res_draw != None:
+                    if res_draw is not None:
                         for key_this in ChanceCustom.replyReg.listRegTotalEscape:
                             res_draw = res_draw.replace(key_this[0], key_this[1])
                         res_list.append(res_draw)
@@ -83,15 +82,15 @@ def RDFunTemp():
                 tmp_pcHash = OlivaDiceCore.pcCard.getPcHash(tmp_pc_id, tmp_pc_platform)
                 skill_valueTable = OlivaDiceCore.pcCard.pcCardDataGetByPcName(tmp_pcHash, hagId=tmp_hagID)
                 tmp_pcName = OlivaDiceCore.pcCard.pcCardDataGetSelectionKey(tmp_pcHash, hagId=tmp_hagID)
-                if tmp_pcName != None:
+                if tmp_pcName is not None:
                     tmp_template_name = OlivaDiceCore.pcCard.pcCardDataGetTemplateKey(tmp_pcHash, tmp_pcName)
                     tmp_template = OlivaDiceCore.pcCard.pcCardDataGetTemplateByKey(tmp_template_name)
-                    if tmp_template != None:
+                    if tmp_template is not None:
                         if 'customDefault' in tmp_template:
                             tmp_template_customDefault = tmp_template['customDefault']
                 rd_para = OlivaDiceCore.onedice.RD(rd_para_str, tmp_template_customDefault, valueTable=skill_valueTable)
                 rd_para.roll()
-                if rd_para.resError == None:
+                if rd_para.resError is None:
                     res = str(rd_para.resInt)
             return res
 
@@ -103,7 +102,7 @@ def RDFunTemp():
 def JRRPFunTemp(mode='jrrp'):
     def JRRPFun(valDict):
         def JRRP_f(matched: 're.Match|dict'):
-            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)  # NOQA: F841
             res = ''
             if 'OlivaDiceJoy' in ChanceCustom.load.listPlugin:
                 hash_tmp = hashlib.new('md5')
@@ -134,7 +133,7 @@ def JRRPFunTemp(mode='jrrp'):
 def PcNameGetFunTemp():
     def PcNameGetFun(valDict):
         def PcNameGet_f(matched: 're.Match|dict'):
-            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)  # NOQA: F841
             res = ''
             if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
                 import OlivaDiceCore
@@ -149,7 +148,7 @@ def PcNameGetFunTemp():
                 if defaultName == '':
                     defaultName = '人物卡'
                 res = OlivaDiceCore.pcCard.getPcNameAPI(pcHash=tmp_pcHash, hagId=tmp_hagID, defaultName=defaultName)
-                if res == None:
+                if res is None:
                     res = ''
 
             return res
@@ -189,7 +188,7 @@ def PcSwitchSetFunTemp():
 def PcLockSetFunTemp(action='lock'):
     def PcLockSetFun(valDict):
         def PcLockSet_f(matched: 're.Match|dict'):
-            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)  # NOQA: F841
             res = ''
             if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
                 import OlivaDiceCore
@@ -256,9 +255,9 @@ def PcSkillGetFunTemp(action='get'):
                         defaultName=defaultName,
                     )
                     res = ''
-                if res == None:
+                if res is None:
                     res = ''
-                elif type(res) == int:
+                elif type(res) is int:
                     res = str(res)
 
             return res

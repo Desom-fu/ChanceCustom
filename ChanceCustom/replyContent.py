@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyContent.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 
 import re
@@ -60,7 +59,7 @@ def flowInputFunTemp():
             bot_hash = None
             try:
                 bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
-            except:
+            except Exception:
                 bot_hash = None
             count = resDict['最大时间'] * 2
             flagLoop = False
@@ -71,7 +70,7 @@ def flowInputFunTemp():
             matchContinue = resDict['是否继续匹配']
             token = str(uuid.uuid4())
             dataTmplate = None
-            if bot_hash != None and contextRegName != None:
+            if bot_hash is not None and contextRegName is not None:
                 if bot_hash not in ChanceCustom.replyContent.contextReg:
                     ChanceCustom.replyContent.contextReg[bot_hash] = {}
                 dataTmplate = {
@@ -119,39 +118,39 @@ def flowInputFunTemp():
                                             dataQueueCount:
                                         ]
                                     )
-                                except:
+                                except Exception:
                                     ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['dataQueue'] = []
                                 flagBreak = False
                                 for dataQueueTmp_this in dataQueueTmp:
                                     res_this = ChanceCustom.replyReg.replyValueRegTotal(
                                         '【%s%s】' % (resDict['回调函数'], dataQueueTmp_this), valDict=valDict
                                     )
-                                    if res_this == str(1):
+                                    if res_this is str(1):
                                         ChanceCustom.replyContent.contextReg[bot_hash][contextRegName] = (
                                             dataTmplate.copy()
                                         )
                                         count = dataTmplate['count']
                                         ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['dataQueue'] = []
-                                    elif res_this == str(-1):
+                                    elif res_this is str(-1):
                                         res = dataQueueTmp_this
                                         flagBreak = True
                                         break
                                 if flagBreak:
                                     break
-                        if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] != None:
+                        if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] is not None:
                             res = str(ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'])
                             break
                         else:
                             ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['count'] = count
                     else:
                         break
-                if flagPop and bot_hash != None and contextRegName != None:
+                if flagPop and bot_hash is not None and contextRegName is not None:
                     if (
                         bot_hash in ChanceCustom.replyContent.contextReg
                         and contextRegName in ChanceCustom.replyContent.contextReg[bot_hash]
                     ):
                         ChanceCustom.replyContent.contextReg[bot_hash].pop(contextRegName)
-            except:
+            except Exception:
                 res = ''
             return res
 
@@ -164,7 +163,7 @@ def contextRegHash(data: list):
     res = None
     hash_tmp = hashlib.new('md5')
     for data_this in data:
-        if type(data_this) == str:
+        if type(data_this) is str:
             hash_tmp.update(str(data_this).encode(encoding='UTF-8'))
     res = hash_tmp.hexdigest()
     return res
@@ -189,13 +188,13 @@ def contextRegTryHit(message: str, event_name: str, valDict: dict, bot_hash: str
         contextRegName_list.append(contextRegHash([str(None), str(None), str(valDict['innerVal']['user_id'])]))
     for contextRegName in contextRegName_list:
         flagMatch = False
-        flagBlock = False
+        flagBlock = False  # NOQA: F841
         if (
-            (contextRegName != None)
+            (contextRegName is not None)
             and (bot_hash in ChanceCustom.replyContent.contextReg)
             and (contextRegName in ChanceCustom.replyContent.contextReg[bot_hash])
             and ('data' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName])
-            and (None == ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'])
+            and (None is ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'])
             and (
                 (
                     ('count' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName])
@@ -252,7 +251,7 @@ def contextRegTryHit(message: str, event_name: str, valDict: dict, bot_hash: str
                 ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['data'] = message
             res = False
             if 'matchContinue' in ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]:
-                if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchContinue'] == True:
+                if ChanceCustom.replyContent.contextReg[bot_hash][contextRegName]['matchContinue'] is True:
                     res = True
     return res
 

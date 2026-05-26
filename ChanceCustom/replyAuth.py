@@ -1,15 +1,15 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyContent.py
 @Author    :   Linnest
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
@@ -17,11 +17,6 @@ import OlivOS
 import ChanceCustom
 from ChanceCustom.replyBase import CurryTemp
 import re
-import time
-import hashlib
-import uuid
-
-from typing import Optional, Callable
 
 
 def set_group_ban(
@@ -50,6 +45,6 @@ def set_group_ban_matcher(matched: 're.Match|dict', **kwargs):
             user_id=resDict['QQ'],
             duration=resDict['时间'],
         )
-    except:
+    except Exception:
         print('？', flush=True)
     return ''

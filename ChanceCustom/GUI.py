@@ -1,15 +1,15 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   GUI.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
@@ -18,11 +18,10 @@ import ChanceCustom
 
 import tkinter
 from tkinter import ttk
-from tkinter import messagebox
 
 try:
     from tkinter import filedialog
-except:
+except Exception:
     pass
 import os
 import shutil
@@ -99,7 +98,7 @@ class BrowserChoiceDialog(object):
 
         try:
             self.dialog.iconbitmap('./resource/tmp_favoricon.ico')
-        except:
+        except Exception:
             pass
 
         self.dialog.update_idletasks()
@@ -217,7 +216,7 @@ class ConfigUI(object):
         self.UIData['style'] = ttk.Style(self.UIObject['root'])
         try:
             self.UIData['style'].element_create('Plain.Notebook.tab', 'from', 'default')
-        except:
+        except Exception:
             pass
         self.UIData['style'].layout(
             'TNotebook.Tab',
@@ -536,7 +535,7 @@ class ConfigUI(object):
                         str(tmp_dictCustomData['data'][tmp_hashSelection][tmp_dictCustomData_this]['priority']),
                     ),
                 )
-            except:
+            except Exception:
                 pass  # 能不能为所有excepetion打日志？
         tmp_tree_item_children = self.UIObject['tree_ccpk'].get_children()
         for tmp_tree_item_this in tmp_tree_item_children:
@@ -554,7 +553,7 @@ class ConfigUI(object):
                         tmp_dictCustomData['ccpkList'][tmp_hashSelection][tmp_dictCustomData_this]['info']['info'],
                     ),
                 )
-            except:
+            except Exception:
                 pass
         try:
             self.UIData['default_reply_day_StringVar'].set(
@@ -575,7 +574,7 @@ class ConfigUI(object):
             self.UIData['default_reply_role_StringVar'].set(
                 tmp_dictCustomData['defaultVar'][tmp_hashSelection]['权限限制']
             )
-        except:
+        except Exception:
             pass
 
     def tree_save(self):
@@ -600,7 +599,7 @@ class ConfigUI(object):
             tmp_dictCustomData['defaultVar'][tmp_hashSelection]['权限限制'] = self.UIData[
                 'default_reply_role_StringVar'
             ].get()
-        except:
+        except Exception:
             pass
         ChanceCustom.load.saveCustomData()
 
@@ -612,7 +611,7 @@ class ConfigUI(object):
             ccpk_load_path_list = filedialog.askopenfilenames(
                 title='导入...', filetypes=[('程心包', '*.ccpk'), ('铃心包', '*.epk')]
             )
-        except:
+        except Exception:
             tkinter.messagebox.showwarning('运行失败', '你需要使用最新版OlivOS才能使用此功能')
         for ccpk_load_path in ccpk_load_path_list:
             try:
@@ -692,7 +691,7 @@ class ConfigUI(object):
                             tmp_dictCustomData['data'][tmp_hashSelection][key_this] = dataAll['data'][key_this]
                         tmp_dictCustomData['ccpkList'][tmp_hashSelection][dataAll['info']['name']] = dataAll
                     removeDir('./plugin/data/ChanceCustom/tmp')
-            except:
+            except Exception:
                 tkinter.messagebox.showwarning('导入失败', '导入 %s 时失败' % ccpk_load_path)
         self.tree_save()
         self.tree_load()
@@ -765,7 +764,7 @@ class ConfigUI(object):
         key_now = get_tree_force(self.UIObject['tree_ccpk'])['text']
         if key_now == '':
             key_now = None
-        if key_now != None:
+        if key_now is not None:
             if key_now in tmp_dictCustomData['ccpkList'][bot_hash_now]:
                 if flagDelete:
                     for key_this in tmp_dictCustomData['ccpkList'][bot_hash_now][key_now]['data']:
@@ -782,7 +781,7 @@ class ConfigUI(object):
         key_now = get_tree_force(self.UIObject['tree_ccpk'])['text']
         if key_now == '':
             key_now = None
-        if key_now != None:
+        if key_now is not None:
             if key_now in tmp_dictCustomData['ccpkList'][bot_hash_now]:
                 for key_this in tmp_dictCustomData['ccpkList'][bot_hash_now][key_now]['data']:
                     if key_this not in tmp_dictCustomData['data'][bot_hash_now]:
@@ -945,7 +944,6 @@ class TreeEditUI(object):
         self.UIObject[obj_name] = ttk.Combobox(self.UIObject[obj_root], textvariable=self.UIData[str_name])
         self.UIObject[obj_name].place(x=x, y=y, width=width, height=height)
         self.UIObject[obj_name].configure(state='readonly')
-        # self.UIObject[obj_name].bind('<<ComboboxSelected>>', lambda x : self.tree_edit_UI_Combobox_ComboboxSelected(x, action, obj_name))
 
     def tree_edit_UI_Entry_init(
         self, obj_root, obj_name, str_name, x, y, width_t, width, height, action, title='', mode='NONE'
@@ -1005,7 +1003,7 @@ class TreeEditUI(object):
         tmp_priority = self.UIData['edit_root_priority_StringVar'].get()
         try:
             tmp_priority = int(tmp_priority)
-        except:
+        except Exception:
             tmp_priority = 0
         tmp_value = self.UIObject['edit_root_value'].get('1.0', tkinter.END)
         if len(tmp_key) > 0:
@@ -1020,9 +1018,9 @@ class TreeEditUI(object):
                     'priority': tmp_priority,
                     'value': tmp_value[:-1],
                 }
-            except:
+            except Exception:
                 pass
-        if self.root != None:
+        if self.root is not None:
             self.root.tree_load()
             self.root.tree_save()
             self.root.UIData['flag_open'] = False
@@ -1234,7 +1232,7 @@ class PackUpUI(object):
         ccpk_save_path = ''
         try:
             ccpk_save_path = filedialog.asksaveasfilename(title='保存至...', filetypes=[('程心包', '*.ccpk')])
-        except:
+        except Exception:
             tkinter.messagebox.showwarning('运行失败', '你需要使用最新版OlivOS才能使用此功能')
         if ccpk_save_path == '':
             return
@@ -1282,16 +1280,16 @@ def removeDir(dir_path):
     try:
         if os.path.exists(dir_path):
             shutil.rmtree(dir_path)
-    except:
+    except Exception:
         try:
             if os.path.exists(dir_path):
                 os.remove(dir_path)
-        except:
+        except Exception:
             pass
 
 
 def copyFile(src, dst):
     try:
         shutil.copyfile(src=src, dst=dst)
-    except:
+    except Exception:
         pass

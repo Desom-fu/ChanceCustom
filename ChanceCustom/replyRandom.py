@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyRandom.py
 @Author    :   lunzhiPenxil仑质、Amber-Keter
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 import random
 
@@ -32,13 +31,13 @@ def RangeNumFunTemp(flagPadding: bool = False):
             ChanceCustom.replyBase.getCharRaw(resDict, 'X', '0', groupDict)
             ChanceCustom.replyBase.getCharRaw(resDict, 'Y', None, groupDict)
             resDict['X'] = ChanceCustom.replyReg.replyValueRegTotal(resDict['X'], valDict=valDict)
-            if resDict['Y'] == None:
+            if resDict['Y'] is None:
                 if '-' in resDict['X']:
                     try:
                         tmp = resDict['X'].split('-')
                         x = int(tmp[0])
                         y = int(tmp[1])
-                    except:
+                    except Exception:
                         flagRight = False
                 else:
                     flagRight = False
@@ -47,7 +46,7 @@ def RangeNumFunTemp(flagPadding: bool = False):
                 try:
                     x = int(resDict['X'])
                     y = int(resDict['Y'])
-                except:
+                except Exception:
                     flagRight = False
             if flagRight:
                 res = str(random.randint(x, y))
@@ -63,7 +62,7 @@ def RangeNumFunTemp(flagPadding: bool = False):
 def RangeCharFunTemp():
     def RangeCharFun(valDict):
         def RangeChar_f(matched: 're.Match|dict'):
-            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)  # NOQA: F841
             alphabet = 'AaBbCcDdEdFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789'
             res = random.choice(alphabet)
             return res
@@ -80,7 +79,7 @@ def ChoiceOneSTRFunTemp():
             res = ''
             resDict = {}
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
-            if None != resDict['...'] and len(resDict['...']) > 0:
+            if None is not resDict['...'] and len(resDict['...']) > 0:
                 resData_this = random.choice(resDict['...'])
                 res = ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
             return res

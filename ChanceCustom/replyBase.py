@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyBase.py
 @Author    :   lunzhiPenxil仑质、Amber-Keter、Linnest
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 import os
 import sys
@@ -69,10 +68,10 @@ def getNumRegTotal(resDict, calKey, default, groupDict, valDict):
     getCharRegTotal(resDict, calKey, default, groupDict, valDict)
     try:
         resDict[calKey] = int(resDict[calKey])
-    except:
+    except Exception:
         try:
             resDict[calKey] = int(default)
-        except:
+        except Exception:
             resDict[calKey] = 0
 
 
@@ -86,9 +85,9 @@ def getBoolRegTotal(resDict, calKey, default, groupDict, valDict, defaultBool=['
 
 def getGroupDictInit(matched: 're.Match|dict'):
     res = {}
-    if type(matched) == re.Match:
+    if type(matched) is re.Match:
         res = matched.groupdict()
-    if type(matched) == dict:
+    if type(matched) is dict:
         res = matched
     return res
 
@@ -301,11 +300,11 @@ def getContextFunTemp():
 def getDefaultValFunTemp(key):
     def getDefaultValFun(valDict):
         def getDefaultVal_f(matched: 're.Match|dict'):
-            groupDict = getGroupDictInit(matched)
+            groupDict = getGroupDictInit(matched)  # NOQA: F841
             res = ''
-            resDict = {}
+            resDict = {}  # NOQA: F841
             if key in valDict['defaultVal']:
-                if type(valDict['defaultVal'][key]) == str:
+                if type(valDict['defaultVal'][key]) is str:
                     res = valDict['defaultVal'][key]
             return res
 
@@ -317,16 +316,16 @@ def getDefaultValFunTemp(key):
 def getDefaultValWithAPIFunTemp(key):
     def getDefaultValWithAPIFun(valDict):
         def getDefaultValWithAPI_f(matched: 're.Match|dict'):
-            groupDict = getGroupDictInit(matched)
+            groupDict = getGroupDictInit(matched)  # NOQA: F841
             res = ''
-            resDict = {}
+            resDict = {}  # NOQA: F841
             if 'apiTemp' not in valDict:
                 valDict['apiTemp'] = {}
             if key in ['机器人名字']:
                 resObj = valDict['innerVal']['plugin_event'].get_stranger_info(
                     valDict['innerVal']['plugin_event'].bot_info.id
                 )
-                if resObj != None and resObj['active']:
+                if resObj is not None and resObj['active']:
                     if key == '机器人名字':
                         res = resObj['data']['name']
             elif key in ['权限', '发送者名片', '发送者专属头衔']:
@@ -336,7 +335,7 @@ def getDefaultValWithAPIFunTemp(key):
                         user_id=valDict['innerVal']['user_id'],
                         host_id=valDict['innerVal']['host_id'],
                     )
-                    if resObj != None and resObj['active']:
+                    if resObj is not None and resObj['active']:
                         if key == '权限':
                             if 'role' in resObj['data']:
                                 if 'owner' == resObj['data']['role']:
@@ -364,7 +363,7 @@ def getDefaultValWithAPIFunTemp(key):
                     resObj = valDict['innerVal']['plugin_event'].get_group_info(
                         group_id=valDict['innerVal']['group_id'], host_id=valDict['innerVal']['host_id']
                     )
-                    if resObj != None and resObj['active']:
+                    if resObj is not None and resObj['active']:
                         resObj['data']
                         if key == '当前群名':
                             if 'name' in resObj['data']:
@@ -394,15 +393,15 @@ def getValFunTemp(valLife='local'):
             key = resDict['自定义名称']
             if valLife == 'local':
                 if key in valDict:
-                    if type(valDict[key]) == str:
+                    if type(valDict[key]) is str:
                         res = valDict[key]
             elif valLife == 'global':
                 if 'valGData' in valDict and key in valDict['valGData']:
-                    if type(valDict['valGData'][key]) == str:
+                    if type(valDict['valGData'][key]) is str:
                         res = valDict['valGData'][key]
             elif valLife == 'globalOwned':
                 if 'valGOData' in valDict and key in valDict['valGOData']:
-                    if type(valDict['valGOData'][key]) == str:
+                    if type(valDict['valGOData'][key]) is str:
                         res = valDict['valGOData'][key]
             return res
 
@@ -424,7 +423,7 @@ def setValFunTemp(valLife='local'):
                 if 'valRawData' not in valDict:
                     valDict['valRawData'] = {}
                 valDict['valRawData'][key] = resDict['赋值内容']
-                if key not in valDict or type(valDict[key]) == str:
+                if key not in valDict or type(valDict[key]) is str:
                     valDict[key] = valDict['valRawData'][key]
             elif valLife == 'global':
                 if 'valRawGData' not in valDict:
@@ -432,7 +431,7 @@ def setValFunTemp(valLife='local'):
                 valDict['valRawGData'][key] = resDict['赋值内容']
                 if 'valGData' not in valDict:
                     valDict['valGData'] = {}
-                if key not in valDict['valGData'] or type(valDict['valGData'][key]) == str:
+                if key not in valDict['valGData'] or type(valDict['valGData'][key]) is str:
                     valDict['valGData'][key] = valDict['valRawGData'][key]
             elif valLife == 'globalOwned':
                 if 'valRawGOData' not in valDict:
@@ -440,7 +439,7 @@ def setValFunTemp(valLife='local'):
                 valDict['valRawGOData'][key] = resDict['赋值内容']
                 if 'valGOData' not in valDict:
                     valDict['valGOData'] = {}
-                if key not in valDict['valGOData'] or type(valDict['valGOData'][key]) == str:
+                if key not in valDict['valGOData'] or type(valDict['valGOData'][key]) is str:
                     valDict['valGOData'][key] = valDict['valRawGOData'][key]
             return res
 
@@ -461,19 +460,19 @@ def updateValFunTemp(valLife='local'):
                 if 'valRawData' not in valDict:
                     valDict['valRawData'] = {}
                 if key in valDict['valRawData']:
-                    if key not in valDict or type(valDict[key]) == str:
+                    if key not in valDict or type(valDict[key]) is str:
                         valDict[key] = valDict['valRawData'][key]
             elif valLife == 'global':
                 if 'valRawGData' not in valDict:
                     valDict['valRawGData'] = {}
                 if key in valDict['valRawGData']:
-                    if key not in valDict['valGData'] or type(valDict['valGData'][key]) == str:
+                    if key not in valDict['valGData'] or type(valDict['valGData'][key]) is str:
                         valDict['valGData'][key] = valDict['valRawGData'][key]
             elif valLife == 'globalOwned':
                 if 'valRawGOData' not in valDict:
                     valDict['valRawGOData'] = {}
                 if key in valDict['valRawGOData']:
-                    if key not in valDict['valGOData'] or type(valDict['valGOData'][key]) == str:
+                    if key not in valDict['valGOData'] or type(valDict['valGOData'][key]) is str:
                         valDict['valGOData'][key] = valDict['valRawGOData'][key]
             return res
 
@@ -485,7 +484,7 @@ def updateValFunTemp(valLife='local'):
 def RunDirectoryFunTemp():
     def RunDirectoryFun(valDict):
         def RunDirectory_f(matched: 're.Match|dict'):
-            groupDict = getGroupDictInit(matched)
+            groupDict = getGroupDictInit(matched)  # NOQA: F841
             res = os.path.split(os.path.realpath(sys.argv[0]))[0]
             return res
 
@@ -497,7 +496,7 @@ def RunDirectoryFunTemp():
 def AppDirectoryFunTemp():
     def AppDirectoryFun(valDict):
         def AppDirectory_f(matched: 're.Match|dict'):
-            groupDict = getGroupDictInit(matched)
+            groupDict = getGroupDictInit(matched)  # NOQA: F841
             res = os.path.split(os.path.realpath(sys.argv[0]))[0]
             res += '/plugin/data/ChanceCustom/'
             return res
@@ -554,7 +553,7 @@ def setFuncValFunTemp(flagGlobal=False):
             getCharRegTotal(resDict, '函数名称', '', groupDict, valDict)
             getDataRaw(resDict, '代码体', None, groupDict)
             key = resDict['函数名称']
-            if key != None:
+            if key is not None:
                 if 'funcValRawData' not in valDict:
                     valDict['funcValRawData'] = {}
                 if 'funcValRawGData' not in valDict:
@@ -578,7 +577,7 @@ def getFuncValFunTemp():
             resDict = {}
             resValDict = {}
             getDataRaw(resDict, '...', None, groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -587,19 +586,19 @@ def getFuncValFunTemp():
                     keyRaw = resDict['...'][0]
                     keyHit = None
                     resRaw = ''
-                    if keyHit == None and 'funcValRawData' in valDict:
+                    if keyHit is None and 'funcValRawData' in valDict:
                         for key in valDict['funcValRawData']:
                             if keyRaw.startswith(key):
                                 keyHit = key
                                 resRaw = valDict['funcValRawData'][key]
                                 break
-                    if keyHit == None and 'funcValRawGData' in valDict:
+                    if keyHit is None and 'funcValRawGData' in valDict:
                         for key in valDict['funcValRawGData']:
                             if keyRaw.startswith(key):
                                 keyHit = key
                                 resRaw = valDict['funcValRawGData'][key]
                                 break
-                    if keyHit != None:
+                    if keyHit is not None:
                         resValDict['参数1'] = keyRaw[len(key) :]
                         count = 2
                         for resValDict_this in resDict['...'][1:]:

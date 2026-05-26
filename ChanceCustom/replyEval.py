@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyEval.py
 @Author    :   Fitz161
-@Contact   :   
+@Contact   :   -
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 
 import re
@@ -124,27 +123,27 @@ def operatorRound(x, y):
 
 
 @addLogicOperator(('&&', 3), ('且', 3))
-def operatorAnd(x, y):
+def operatorAnd(x, y):  # NOQA: F811
     return x and y
 
 
 @addLogicOperator(('||', 2), ('或', 2))
-def operatorOr(x, y):
+def operatorOr(x, y):  # NOQA: F811
     return x or y
 
 
 @addLogicOperator(('+', 10))
-def operatorAdd(x, y):
+def operatorAdd(x, y):  # NOQA: F811
     return operator.add(x, y)
 
 
 @addLogicOperator(('-', 10))
-def operatorSub(x, y):
+def operatorSub(x, y):  # NOQA: F811
     return operator.sub(x, y)
 
 
 @addLogicOperator(('/', 11))
-def operatorDiv(x, y):
+def operatorDiv(x, y):  # NOQA: F811
     try:
         return operator.truediv(x, y)
     except ZeroDivisionError:
@@ -152,17 +151,17 @@ def operatorDiv(x, y):
 
 
 @addLogicOperator(('*', 11))
-def operatorMul(x, y):
+def operatorMul(x, y):  # NOQA: F811
     return operator.mul(x, y)
 
 
 @addLogicOperator(('%', 11))
-def operatorMod(x, y):
+def operatorMod(x, y):  # NOQA: F811
     return divmod(x, y)[1]
 
 
 @addLogicOperator(('\\', 11))
-def operatorQuotient(x, y):
+def operatorQuotient(x, y):  # NOQA: F811
     return divmod(x, y)[0]
 
 
@@ -223,11 +222,11 @@ def operatorRegMatch(x, y):
 
 @addLogicOperator(('!reg', 5))
 def operatorRegNotMatch(x, y):
-    return re.search(str(x), str(y)) == None
+    return re.search(str(x), str(y)) is None
 
 
 class Symbol:
-    _BINARY_OPERATOR = set('+-*×/÷%\^@&|⊕<>')
+    _BINARY_OPERATOR = set(r'+-*×/÷%\^@&|⊕<>')
     _WHITESPACE = set(' \t\n\r')
     _NUMERAL_START = set(digits) | set('.')
     _NUMERAL_END = set(digits)
@@ -299,7 +298,7 @@ def customEval(get_one_token):
     operator_stack = []
     operand_stack = []
     token = get_one_token()
-    while token or (type(token) == int and token == 0):
+    while token or (type(token) is int and token == 0):
         if isinstance(token, (int, float)):
             operand_stack.append(token)
         elif token in Symbol._BINARY_OPERATOR:
@@ -374,12 +373,12 @@ class LogicLexer:
         k = 0
 
         def matchNumber():
-            nonlocal k
+            nonlocal k  # NOQA: F824
             i = k
             while i < self.len:
                 if i == self.len - 1:
                     break
-                char = self.string[i]
+                char = self.string[i]  # NOQA: F841
                 next_char = self.string[i + 1]
                 if next_char in LogicSymbol._NUMERAL_END:
                     i += 1
@@ -393,7 +392,7 @@ class LogicLexer:
             return offset
 
         def matchOperator():
-            nonlocal k
+            nonlocal k  # NOQA: F824
             i = k
             while i < self.len:
                 if i == self.len - 1:
@@ -530,7 +529,7 @@ def evalExprFunTemp():
             expr = resDict['计算公式']
             try:
                 res = str(customEval(Lexer(expr).tokenGenerator()))
-            except:
+            except Exception:
                 res = str(float('nan'))
             return res
 
@@ -549,8 +548,8 @@ def logicEvalExprFunTemp():
             expr = resDict['表达式']
             try:
                 result = bool(logicEval(LogicLexer(expr).tokenGenerator()))
-                res = '真' if result == True else '假'
-            except:
+                res = '真' if result is True else '假'
+            except Exception:
                 res = '[逻辑]表达式含有语法错误'
             return res
 
@@ -681,7 +680,7 @@ def splitSortFunTemp(type='sort'):
                 if text.startswith('-数字'):
                     try:
                         splited_text = map(int, text[3:].split(delimiter))
-                    except:
+                    except Exception:
                         splited_text = text[3:].split(delimiter)
                 else:
                     splited_text = text.split(delimiter)
@@ -714,7 +713,7 @@ def splitSortFunTemp(type='sort'):
                     if sortByValFlag:
                         try:
                             sortedDataList = sorted(dataMap.items(), key=lambda x: int(x[0]), reverse=reverseFlag)
-                        except:
+                        except Exception:
                             sortedDataList = sorted(dataMap.items(), key=lambda x: x[0], reverse=reverseFlag)
                     else:
                         sortedDataList = sorted(dataMap.items(), key=lambda x: x[0], reverse=reverseFlag)
@@ -751,7 +750,7 @@ def getMD5FunTemp():
         try:
             with open(path, 'rb') as f:
                 return f.read()
-        except:
+        except Exception:
             return ''
 
     def readOnlineFile(url):
@@ -761,7 +760,7 @@ def getMD5FunTemp():
                 return res.content
             else:
                 raise
-        except:
+        except Exception:
             return ''
 
     def getMD5Fun(valDict):
@@ -801,7 +800,7 @@ def getMD5FunTemp():
                 else:
                     md.update(content.encode('utf-8'))
                     res += md.hexdigest()[: resDict['MD5位数']].upper()
-            except:
+            except Exception:
                 res = '出现错误'
             return res
 

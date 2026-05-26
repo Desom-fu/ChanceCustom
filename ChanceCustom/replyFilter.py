@@ -1,15 +1,15 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyFilter.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
@@ -39,14 +39,14 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
         bot_hash = 'unity'
         plugin_event: 'OlivOS.API.Event|None' = None
         user_hash = None
-        if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
+        if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] is not None:
             bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
         if 'plugin_event' in valDict['innerVal']:
             plugin_event = valDict['innerVal']['plugin_event']
-        if plugin_event != None:
+        if plugin_event is not None:
             user_hash = getUserHash(plugin_event.data.user_id, 'user', plugin_event.platform['platform'])
         if not flagSkip:
-            if '【主人】' in replyValue and plugin_event != None:
+            if '【主人】' in replyValue and plugin_event is not None:
                 if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
                     try:
                         import OlivaDiceCore
@@ -60,16 +60,16 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
                             getPreFilterReply('权限限制', valDict)
                             res = False
                             flagSkip = True
-                    except:
+                    except Exception:
                         pass
         if not flagSkip:
-            if '【群管】' in replyValue and plugin_event != None:
+            if '【群管】' in replyValue and plugin_event is not None:
                 if 'role' in plugin_event.data.sender and plugin_event.data.sender['role'] not in ['admin', 'onwer']:
                     getPreFilterReply('权限限制', valDict)
                     res = False
                     flagSkip = True
         if not flagSkip:
-            if '【管理】' in replyValue and plugin_event != None:
+            if '【管理】' in replyValue and plugin_event is not None:
                 if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
                     try:
                         import OlivaDiceCore
@@ -83,17 +83,17 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
                             getPreFilterReply('权限限制', valDict)
                             res = False
                             flagSkip = True
-                    except:
+                    except Exception:
                         pass
                 if 'role' in plugin_event.data.sender and plugin_event.data.sender['role'] not in ['admin', 'onwer']:
                     getPreFilterReply('权限限制', valDict)
                     res = False
                     flagSkip = True
         if not flagSkip:
-            res_re = re.match('[\s\S]*【回复间隔(\d+)】', replyValue)
-            if res_re != None and plugin_event != None:
+            res_re = re.match(r'[\s\S]*【回复间隔(\d+)】', replyValue)
+            if res_re is not None and plugin_event is not None:
                 res_re_list = res_re.groups()
-                if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
+                if len(res_re_list) >= 1 and type(res_re_list[0]) is str:
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
@@ -115,10 +115,10 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
                         flagSkip = True
                         getPreFilterReply('回复间隔', valDict)
         if not flagSkip:
-            res_re = re.match('[\s\S]*【一次间隔(\d+)】', replyValue)
-            if res_re != None and plugin_event != None:
+            res_re = re.match(r'[\s\S]*【一次间隔(\d+)】', replyValue)
+            if res_re is not None and plugin_event is not None:
                 res_re_list = res_re.groups()
-                if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
+                if len(res_re_list) >= 1 and type(res_re_list[0]) is str:
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
@@ -141,10 +141,10 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
                         getPreFilterReply('一次间隔', valDict)
                         valDict['innerVal']['间隔'] = str(int((lastTime + setCount * 60 - nowTime) / 60) + 1)
         if not flagSkip:
-            res_re = re.match('[\s\S]*【一月上限(\d+)】', replyValue)
-            if res_re != None and plugin_event != None:
+            res_re = re.match(r'[\s\S]*【一月上限(\d+)】', replyValue)
+            if res_re is not None and plugin_event is not None:
                 res_re_list = res_re.groups()
-                if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
+                if len(res_re_list) >= 1 and type(res_re_list[0]) is str:
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
@@ -178,10 +178,10 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
                         flagSkip = True
                         getPreFilterReply('一月上限', valDict)
         if not flagSkip:
-            res_re = re.match('[\s\S]*【一周上限(\d+)】', replyValue)
-            if res_re != None and plugin_event != None:
+            res_re = re.match(r'[\s\S]*【一周上限(\d+)】', replyValue)
+            if res_re is not None and plugin_event is not None:
                 res_re_list = res_re.groups()
-                if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
+                if len(res_re_list) >= 1 and type(res_re_list[0]) is str:
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
@@ -215,10 +215,10 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
                         flagSkip = True
                         getPreFilterReply('一周上限', valDict)
         if not flagSkip:
-            res_re = re.match('[\s\S]*【一天上限(\d+)】', replyValue)
-            if res_re != None and plugin_event != None:
+            res_re = re.match(r'[\s\S]*【一天上限(\d+)】', replyValue)
+            if res_re is not None and plugin_event is not None:
                 res_re_list = res_re.groups()
-                if len(res_re_list) >= 1 and type(res_re_list[0]) == str:
+                if len(res_re_list) >= 1 and type(res_re_list[0]) is str:
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
@@ -251,7 +251,7 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
                         res = False
                         flagSkip = True
                         getPreFilterReply('一天上限', valDict)
-    except:
+    except Exception:
         pass
 
     ChanceCustom.replyFilter.gPreFilterLock.release()
@@ -262,7 +262,7 @@ def preFilter(replyKey: str, replyValue: str, valDict: dict):
 def getPreFilterReply(key: str, valDict: dict):
     bot_hash = 'unity'
     res = None
-    if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
+    if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] is not None:
         bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
     # 应用重定向逻辑（对于非unity的hash，仅在OlivaDiceCore可用时）
     if bot_hash != 'unity' and 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
@@ -270,7 +270,7 @@ def getPreFilterReply(key: str, valDict: dict):
             import OlivaDiceCore
 
             redirected_bot_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(bot_hash)
-        except:
+        except Exception:
             redirected_bot_hash = bot_hash
     else:
         redirected_bot_hash = bot_hash
@@ -286,10 +286,10 @@ def getPreFilterReply(key: str, valDict: dict):
 def getPreFilterFunTemp(key: str):
     def getPreFilterFun(valDict):
         def getPreFilter_f(matched: 're.Match|dict'):
-            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)  # NOQA: F841
             res = ''
-            resDict = {}
-            if 'innerVal' in valDict and key in valDict['innerVal'] and valDict['innerVal'][key] != None:
+            resDict = {}  # NOQA: F841
+            if 'innerVal' in valDict and key in valDict['innerVal'] and valDict['innerVal'][key] is not None:
                 res = valDict['innerVal'][key]
             return res
 
@@ -302,7 +302,7 @@ def str2int(value: str):
     res = 0
     try:
         res = int(value)
-    except:
+    except Exception:
         res = 0
     return res
 
@@ -314,13 +314,13 @@ def releaseDir(dir_path):
 
 def getUserHash(userId, userType, platform, subId=None):
     hash_tmp = hashlib.new('md5')
-    if subId != None:
+    if subId is not None:
         tmp_strID = '%s|%s' % (str(subId), str(userId))
         hash_tmp.update(tmp_strID.encode(encoding='UTF-8'))
     else:
         hash_tmp.update(str(userId).encode(encoding='UTF-8'))
     hash_tmp.update(str(userType).encode(encoding='UTF-8'))
     hash_tmp.update(str(platform).encode(encoding='UTF-8'))
-    if subId != None:
+    if subId is not None:
         hash_tmp.update(str(subId).encode(encoding='UTF-8'))
     return hash_tmp.hexdigest()

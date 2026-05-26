@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyReg.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 
 import re
@@ -277,31 +276,31 @@ def replyValueReg(message, valDict):
                     calDict['函数名'] = rule[0]
                     count += len(listRegTotalFun_this[0])
                     break
-            if rule == None:
+            if rule is None:
                 calDict['函数名'] = ''
             flag_now = 'para'
         elif 'para' == flag_now:
             if replyValueRegJudge('【', message, count):
                 stack_count += 1
-                if (rule != None and cal_pos < len(rule[1])) or flag_isArgs:
+                if (rule is not None and cal_pos < len(rule[1])) or flag_isArgs:
                     cal_this += message[count]
                 count += len('【')
             elif replyValueRegJudge('】', message, count):
                 if stack_count > 0:
                     stack_count -= 1
-                    if (rule != None and cal_pos < len(rule[1])) or flag_isArgs:
+                    if (rule is not None and cal_pos < len(rule[1])) or flag_isArgs:
                         cal_this += message[count]
                 else:
-                    if rule != None and cal_pos < len(rule[1]) - 1:
+                    if rule is not None and cal_pos < len(rule[1]) - 1:
                         calDict[rule[1][cal_pos]] = cal_this
-                    elif rule != None and cal_pos == len(rule[1]) - 1 and rule[1][cal_pos] != '...':
+                    elif rule is not None and cal_pos == len(rule[1]) - 1 and rule[1][cal_pos] != '...':
                         calDict[rule[1][cal_pos]] = cal_this
-                    elif rule != None and cal_pos >= len(rule[1]) - 1 and len(rule[1]) > 0 and rule[1][-1] == '...':
+                    elif rule is not None and cal_pos >= len(rule[1]) - 1 and len(rule[1]) > 0 and rule[1][-1] == '...':
                         if '...' not in calDict:
                             calDict['...'] = []
                         calDict['...'].append(cal_this)
-                    if rule != None:
-                        if type(rule[2]) == str:
+                    if rule is not None:
+                        if type(rule[2]) is str:
                             res_message += rule[2]
                         else:
                             res_message += rule[2](valDict)(calDict)
@@ -314,11 +313,11 @@ def replyValueReg(message, valDict):
                     flag_now = 'plant'
                 count += len('】')
             elif stack_count == 0 and replyValueRegJudge('>=<', message, count):
-                if rule != None and cal_pos < len(rule[1]) - 1:
+                if rule is not None and cal_pos < len(rule[1]) - 1:
                     calDict[rule[1][cal_pos]] = cal_this
-                elif rule != None and cal_pos == len(rule[1]) - 1 and rule[1][cal_pos] != '...':
+                elif rule is not None and cal_pos == len(rule[1]) - 1 and rule[1][cal_pos] != '...':
                     calDict[rule[1][cal_pos]] = cal_this
-                elif rule != None and cal_pos >= len(rule[1]) - 1 and len(rule[1]) > 0 and rule[1][-1] == '...':
+                elif rule is not None and cal_pos >= len(rule[1]) - 1 and len(rule[1]) > 0 and rule[1][-1] == '...':
                     if '...' not in calDict:
                         calDict['...'] = []
                     calDict['...'].append(cal_this)
@@ -327,7 +326,7 @@ def replyValueReg(message, valDict):
                 cal_pos += 1
                 count += len('>=<')
             else:
-                if (rule != None and cal_pos < len(rule[1])) or flag_isArgs:
+                if (rule is not None and cal_pos < len(rule[1])) or flag_isArgs:
                     cal_this += message[count]
                 count += 1
     return res_message

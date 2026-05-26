@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyJson.py
 @Author    :   lunzhiPenxil仑质
 @Contact   :   lunzhipenxil@gmail.com
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 
 import re
@@ -24,7 +23,7 @@ def jsonSetDataHandler(data: str, pathList: list, setVal: str, flagValType: str)
     json_data = {}
     try:
         json_data = json.loads(data)
-    except:
+    except Exception:
         json_data = {}
     json_data_this = json_data
     count = 0
@@ -33,7 +32,7 @@ def jsonSetDataHandler(data: str, pathList: list, setVal: str, flagValType: str)
             if count < len(pathList) - 1:
                 if key_this not in json_data_this:
                     json_data_this[key_this] = {}
-                if type(json_data_this[key_this]) != dict:
+                if type(json_data_this[key_this]) is not dict:
                     json_data_this[key_this] = {}
                 json_data_this = json_data_this[key_this]
             elif count == len(pathList) - 1:
@@ -43,7 +42,7 @@ def jsonSetDataHandler(data: str, pathList: list, setVal: str, flagValType: str)
                         data_in = setVal
                     else:
                         data_in = json.loads(setVal)
-                except:
+                except Exception:
                     data_in = setVal
                 if type(data_in) not in [dict, list]:
                     if flagValType == 'default':
@@ -52,7 +51,7 @@ def jsonSetDataHandler(data: str, pathList: list, setVal: str, flagValType: str)
                         pass
                 json_data_this[key_this] = data_in
             count += 1
-    except:
+    except Exception:
         pass
     res = json.dumps(json_data, ensure_ascii=False, indent=4)
     return res
@@ -67,7 +66,7 @@ def jsonSetFunTemp(flagValType: str = 'default'):
             ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '写入值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -77,7 +76,7 @@ def jsonSetFunTemp(flagValType: str = 'default'):
                 ChanceCustom.replyIO.releasePath(resDict['文件路径'])
                 with open(resDict['文件路径'], 'r', encoding='utf-8') as json_f:
                     json_data = json_f.read()
-            except:
+            except Exception:
                 json_data = ''
             try:
                 json_data_text = ChanceCustom.replyJson.jsonSetDataHandler(
@@ -85,7 +84,7 @@ def jsonSetFunTemp(flagValType: str = 'default'):
                 )
                 with open(resDict['文件路径'], 'w', encoding='utf-8') as json_f:
                     json_f.write(json_data_text)
-            except:
+            except Exception:
                 pass
             return res
 
@@ -103,7 +102,7 @@ def jsonSetStrFunTemp(flagValType: str = 'default'):
             ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', '', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '写入值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -113,7 +112,7 @@ def jsonSetStrFunTemp(flagValType: str = 'default'):
                 res = ChanceCustom.replyJson.jsonSetDataHandler(
                     json_data, resDict['...'], resDict['写入值'], flagValType
                 )
-            except:
+            except Exception:
                 pass
             return res
 
@@ -127,7 +126,7 @@ def jsonGetDataHandler(data: str, pathList: list, defaultVal: str):
     json_data = {}
     try:
         json_data = json.loads(data)
-    except:
+    except Exception:
         json_data = {}
     res_obj = defaultVal
     json_data_this = json_data
@@ -135,11 +134,11 @@ def jsonGetDataHandler(data: str, pathList: list, defaultVal: str):
     try:
         res_obj = json_data_this
         for key_this in pathList:
-            if type(json_data_this) == dict and key_this in json_data_this:
+            if type(json_data_this) is dict and key_this in json_data_this:
                 json_data_this = json_data_this[key_this]
                 res_obj = json_data_this
             elif (
-                type(json_data_this) == list
+                type(json_data_this) is list
                 and (int(key_this) >= -len(json_data_this))
                 and (int(key_this) < len(json_data_this))
             ):
@@ -153,7 +152,7 @@ def jsonGetDataHandler(data: str, pathList: list, defaultVal: str):
             res = json.dumps(res_obj, ensure_ascii=False, indent=4)
         else:
             res = str(res_obj)
-    except:
+    except Exception:
         res = defaultVal
     return res
 
@@ -175,7 +174,7 @@ def jsonGetFunTemp():
             try:
                 with open(resDict['文件路径'], 'r', encoding='utf-8') as json_f:
                     json_data = json_f.read()
-            except:
+            except Exception:
                 json_data = ''
             res = resDict['默认值']
             res = ChanceCustom.replyJson.jsonGetDataHandler(json_data, resDict['...'], resDict['默认值'])
@@ -212,17 +211,17 @@ def jsonDelDataHandler(data: str, pathList: list):
     json_data = {}
     try:
         json_data = json.loads(data)
-    except:
+    except Exception:
         json_data = {}
     json_data_this = json_data
     count = 0
     try:
         for key_this in pathList:
             if count < len(pathList) - 1:
-                if type(json_data_this) == dict and key_this in json_data_this:
+                if type(json_data_this) is dict and key_this in json_data_this:
                     json_data_this = json_data_this[key_this]
                 elif (
-                    type(json_data_this) == list
+                    type(json_data_this) is list
                     and (int(key_this) >= -len(json_data_this))
                     and (int(key_this) < len(json_data_this))
                 ):
@@ -230,14 +229,14 @@ def jsonDelDataHandler(data: str, pathList: list):
                 else:
                     break
             elif count == len(pathList) - 1:
-                if type(json_data_this) == dict:
+                if type(json_data_this) is dict:
                     if key_this in json_data_this:
                         json_data_this.pop(key_this)
-                elif type(json_data_this) == list:
+                elif type(json_data_this) is list:
                     if (int(key_this) >= -len(json_data_this)) and (int(key_this) < len(json_data_this)):
                         json_data_this.pop(int(key_this))
             count += 1
-    except:
+    except Exception:
         pass
     res = json.dumps(json_data, ensure_ascii=False, indent=4)
     return res
@@ -251,7 +250,7 @@ def jsonDelFunTemp():
             resDict = {}
             ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -260,13 +259,13 @@ def jsonDelFunTemp():
             try:
                 with open(resDict['文件路径'], 'r', encoding='utf-8') as json_f:
                     json_data = json_f.read()
-            except:
+            except Exception:
                 json_data = ''
             try:
                 json_data_text = ChanceCustom.replyJson.jsonDelDataHandler(json_data, resDict['...'])
                 with open(resDict['文件路径'], 'w', encoding='utf-8') as json_f:
                     json_f.write(json_data_text)
-            except:
+            except Exception:
                 pass
             return res
 
@@ -283,7 +282,7 @@ def jsonDelStrFunTemp():
             resDict = {}
             ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', None, groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -291,7 +290,7 @@ def jsonDelStrFunTemp():
             json_data = resDict['来源']
             try:
                 res = ChanceCustom.replyJson.jsonDelDataHandler(json_data, resDict['...'])
-            except:
+            except Exception:
                 pass
             return res
 
@@ -304,11 +303,11 @@ def jsonAppendDataHandler(data: str, pathList: list, setVal: str, flagValType: s
     json_data = None
     try:
         json_data = json.loads(data)
-    except:
+    except Exception:
         json_data = None
     count = 0
     try:
-        if json_data == None:
+        if json_data is None:
             if len(pathList) > 0:
                 json_data = {}
             else:
@@ -322,14 +321,14 @@ def jsonAppendDataHandler(data: str, pathList: list, setVal: str, flagValType: s
                     else:
                         json_data_this[key_this] = {}
                 else:
-                    if count == len(pathList) - 1 and type(json_data_this[key_this]) != list:
+                    if count == len(pathList) - 1 and type(json_data_this[key_this]) is not list:
                         json_data_this[key_this] = []
-                    elif count != len(pathList) - 1 and type(json_data_this[key_this]) != dict:
+                    elif count != len(pathList) - 1 and type(json_data_this[key_this]) is not dict:
                         json_data_this[key_this] = {}
-                if type(json_data_this) == dict and key_this in json_data_this:
+                if type(json_data_this) is dict and key_this in json_data_this:
                     json_data_this = json_data_this[key_this]
                 elif (
-                    type(json_data_this) == list
+                    type(json_data_this) is list
                     and (int(key_this) >= -len(json_data_this))
                     and (int(key_this) < len(json_data_this))
                 ):
@@ -343,7 +342,7 @@ def jsonAppendDataHandler(data: str, pathList: list, setVal: str, flagValType: s
                 data_in = setVal
             else:
                 data_in = json.loads(setVal)
-        except:
+        except Exception:
             data_in = setVal
         if type(data_in) not in [dict, list]:
             if flagValType == 'default':
@@ -351,7 +350,7 @@ def jsonAppendDataHandler(data: str, pathList: list, setVal: str, flagValType: s
             elif flagValType == 'auto':
                 pass
         json_data_this.append(data_in)
-    except:
+    except Exception:
         pass
     res = json.dumps(json_data, ensure_ascii=False, indent=4)
     return res
@@ -366,7 +365,7 @@ def jsonAppendFunTemp(flagValType: str = 'default'):
             ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '插入值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -376,7 +375,7 @@ def jsonAppendFunTemp(flagValType: str = 'default'):
                 ChanceCustom.replyIO.releasePath(resDict['文件路径'])
                 with open(resDict['文件路径'], 'r', encoding='utf-8') as json_f:
                     json_data = json_f.read()
-            except:
+            except Exception:
                 json_data = ''
             try:
                 json_data_text = ChanceCustom.replyJson.jsonAppendDataHandler(
@@ -384,7 +383,7 @@ def jsonAppendFunTemp(flagValType: str = 'default'):
                 )
                 with open(resDict['文件路径'], 'w', encoding='utf-8') as json_f:
                     json_f.write(json_data_text)
-            except:
+            except Exception:
                 pass
             return res
 
@@ -402,7 +401,7 @@ def jsonAppendStrFunTemp(flagValType: str = 'default'):
             ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', None, groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '插入值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -412,7 +411,7 @@ def jsonAppendStrFunTemp(flagValType: str = 'default'):
                 res = ChanceCustom.replyJson.jsonAppendDataHandler(
                     json_data, resDict['...'], resDict['插入值'], flagValType
                 )
-            except:
+            except Exception:
                 pass
             return res
 
@@ -427,18 +426,18 @@ def jsonGetListDataHandler(data: str, pathList: list, splitVal: str):
     json_data = {}
     try:
         json_data = json.loads(data)
-    except:
+    except Exception:
         json_data = {}
     json_data_this = json_data
     count = 0
     try:
         res_obj = json_data_this
         for key_this in pathList:
-            if type(json_data_this) == dict and key_this in json_data_this:
+            if type(json_data_this) is dict and key_this in json_data_this:
                 json_data_this = json_data_this[key_this]
                 res_obj = json_data_this
             elif (
-                type(json_data_this) == list
+                type(json_data_this) is list
                 and (int(key_this) >= -len(json_data_this))
                 and (int(key_this) < len(json_data_this))
             ):
@@ -457,7 +456,7 @@ def jsonGetListDataHandler(data: str, pathList: list, splitVal: str):
             ])
         else:
             res = defaultVal
-    except:
+    except Exception:
         res = defaultVal
     return res
 
@@ -479,7 +478,7 @@ def jsonGetListFunTemp():
             try:
                 with open(resDict['文件路径'], 'r', encoding='utf-8') as json_f:
                     json_data = json_f.read()
-            except:
+            except Exception:
                 json_data = ''
             res = ChanceCustom.replyJson.jsonGetListDataHandler(json_data, resDict['...'], resDict['分隔符'])
             return res
@@ -518,18 +517,18 @@ def jsonDelListContentDataHandler(data: str, pathList: list, setVal: str):
     res = ''
     try:
         json_data = json.loads(data)
-    except:
+    except Exception:
         json_data = None
     count = 0
     try:
-        if json_data == None:
+        if json_data is None:
             return res
         json_data_this = json_data
         for key_this in pathList:
             if count < len(pathList):
                 if key_this not in json_data_this:
                     return res
-                if type(json_data_this) == dict and key_this in json_data_this:
+                if type(json_data_this) is dict and key_this in json_data_this:
                     if count == len(pathList) - 1:
                         if type(json_data_this[key_this]) is list:
                             json_data_root = json_data_this
@@ -538,7 +537,7 @@ def jsonDelListContentDataHandler(data: str, pathList: list, setVal: str):
                             return res
                     json_data_this = json_data_this[key_this]
                 elif (
-                    type(json_data_this) == list
+                    type(json_data_this) is list
                     and (int(key_this) >= -len(json_data_this))
                     and (int(key_this) < len(json_data_this))
                 ):
@@ -553,17 +552,17 @@ def jsonDelListContentDataHandler(data: str, pathList: list, setVal: str):
                     return res
             count += 1
         data_in = str(setVal)
-        if json_data == None:
+        if json_data is None:
             return res
         json_data_root_new = []
         for json_data_this_this in json_data_this:
             if str(data_in) != str(json_data_this_this):
                 json_data_root_new.append(json_data_this_this)
-        if json_data_root != None and json_data_key != None:
+        if json_data_root is not None and json_data_key is not None:
             json_data_root[json_data_key] = json_data_root_new
         else:
             json_data = json_data_root_new
-    except:
+    except Exception:
         pass
     res = json.dumps(json_data, ensure_ascii=False, indent=4)
     return res
@@ -578,7 +577,7 @@ def jsonDelListContentFunTemp():
             ChanceCustom.replyBase.getCharRegTotal(resDict, '文件路径', None, groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '删除值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -588,7 +587,7 @@ def jsonDelListContentFunTemp():
                 ChanceCustom.replyIO.releasePath(resDict['文件路径'])
                 with open(resDict['文件路径'], 'r', encoding='utf-8') as json_f:
                     json_data = json_f.read()
-            except:
+            except Exception:
                 json_data = ''
             try:
                 json_data_text = ChanceCustom.replyJson.jsonDelListContentDataHandler(
@@ -596,7 +595,7 @@ def jsonDelListContentFunTemp():
                 )
                 with open(resDict['文件路径'], 'w', encoding='utf-8') as json_f:
                     json_f.write(json_data_text)
-            except:
+            except Exception:
                 pass
             return res
 
@@ -614,7 +613,7 @@ def jsonDelListContentStrFunTemp(flagValType: str = 'default'):
             ChanceCustom.replyBase.getCharRegTotal(resDict, '来源', None, groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '删除值', '', groupDict, valDict)
             ChanceCustom.replyBase.getDataRaw(resDict, '...', [], groupDict)
-            if None != resDict['...']:
+            if None is not resDict['...']:
                 resDict['...'] = [
                     ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
                     for resData_this in resDict['...']
@@ -624,7 +623,7 @@ def jsonDelListContentStrFunTemp(flagValType: str = 'default'):
                 res = ChanceCustom.replyJson.jsonDelListContentDataHandler(
                     json_data, resDict['...'], resDict['删除值'], flagValType
                 )
-            except:
+            except Exception:
                 pass
             return res
 

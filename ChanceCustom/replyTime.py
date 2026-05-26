@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyTime.py
 @Author    :   Fitz161
-@Contact   :   
+@Contact   :   -
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 
 import re
@@ -43,9 +42,9 @@ def time2TextFunTemp():
 def getTimestampFunTemp(length: int):
     def getTimestampFun(valDict):
         def getTimestamp_f(matched: 're.Match|dict'):
-            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)  # NOQA: F841
             res = ''
-            resDict = {}
+            resDict = {}  # NOQA: F841
             res = str(time.time()).replace('.', '')[:length]
             return res
 
@@ -57,9 +56,9 @@ def getTimestampFunTemp(length: int):
 def getTimeIntervalFunTemp():
     def str2timestamp(time):
         time_pattern1 = (
-            '(\d{4})[- \/.年](\d{1,2})[- \/.月](\d{1,2})[- \/.日](\d{1,2})[- :\/.时](\d{1,2})[- :\/.分](\d{1,2})秒?'
+            r'(\d{4})[- \/.年](\d{1,2})[- \/.月](\d{1,2})[- \/.日](\d{1,2})[- :\/.时](\d{1,2})[- :\/.分](\d{1,2})秒?'
         )
-        time_pattern2 = '(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})'
+        time_pattern2 = r'(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})'
         if time.isdigit():
             match = re.match(time_pattern2, time)
             if match is None:

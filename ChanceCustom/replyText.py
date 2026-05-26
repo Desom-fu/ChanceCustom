@@ -1,19 +1,18 @@
-"""
+r"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
-/    \  \//    \  \/|     ___/      <  
-\     \___\     \___|    |   |    |  \ 
+/    \  \//    \  \/|     ___/      <
+\     \___\     \___|    |   |    |  \
  \______  /\______  /____|   |____|__ \
         \/        \/                 \/
 @File      :   replyText.py
 @Author    :   Fitz161
-@Contact   :   
+@Contact   :   -
 @License   :   AGPL
-@Copyright :   (C) 2020-2022, OlivOS-Team
+@Copyright :   (C) 2020-2026, OlivOS-Team
 @Desc      :   None
 """
 
-import OlivOS
 import ChanceCustom
 
 import re
@@ -24,7 +23,7 @@ from math import ceil
 def str2int(intStr, default=0):
     try:
         return int(intStr)
-    except:
+    except Exception:
         return default
 
 
@@ -550,9 +549,9 @@ def replaceTextForEachLineFunTemp():
 def hideResultFunTemp():
     def hideResultFun(valDict):
         def hideResult_f(matched: 're.Match|dict'):
-            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
+            groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)  # NOQA: F841
             res = ''
-            resDict = {}
+            resDict = {}  # NOQA: F841
             return res
 
         return hideResult_f
@@ -589,7 +588,7 @@ def roundNumberFunTemp():
     def str2float(floatStr, default=0.0):
         try:
             return float(floatStr)
-        except:
+        except Exception:
             return default
 
     def roundNumberFun(valDict):
@@ -811,7 +810,7 @@ def switchAndReturnFunTemp():
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
             case = resDict['序号或逻辑组']
             cases = resDict['...']
-            if None == case or None == cases or 0 == len(cases):
+            if None is case or None is cases or 0 == len(cases):
                 # if not any([case,cases,len(case)]):
                 res = ''
             elif case.find('||') != -1:
