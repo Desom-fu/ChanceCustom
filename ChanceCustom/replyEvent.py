@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,18 +11,16 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
 
 import copy
 
-def deepCopyEventUInfo(src:OlivOS.API.Event):
-    res = OlivOS.API.Event(
-        sdk_event = OlivOS.contentAPI.fake_sdk_event(src.bot_info),
-        log_func = None
-    )
+
+def deepCopyEventUInfo(src: OlivOS.API.Event):
+    res = OlivOS.API.Event(sdk_event=OlivOS.contentAPI.fake_sdk_event(src.bot_info), log_func=None)
     res.sdk_event = src.sdk_event
     res.sdk_event_type = src.sdk_event_type
     res.base_info = copy.deepcopy(src.base_info)
@@ -34,15 +32,11 @@ def deepCopyEventUInfo(src:OlivOS.API.Event):
     res.log_func = src.log_func
     return res
 
-def getReRxEvent_group_message(src:OlivOS.API.Event, message:str):
+
+def getReRxEvent_group_message(src: OlivOS.API.Event, message: str):
     res = deepCopyEventUInfo(src)
     target_message = message
-    res.data = res.group_message(
-        group_id = '',
-        user_id = '',
-        message = '',
-        sub_type = 'group'
-    )
+    res.data = res.group_message(group_id='', user_id='', message='', sub_type='group')
     res.plugin_info['func_type'] = 'group_message'
     if type(src.data) is OlivOS.API.Event.group_message:
         res.active = True
@@ -74,14 +68,11 @@ def getReRxEvent_group_message(src:OlivOS.API.Event, message:str):
 
     return res
 
-def getReRxEvent_private_message(src:OlivOS.API.Event, message:str):
+
+def getReRxEvent_private_message(src: OlivOS.API.Event, message: str):
     res = deepCopyEventUInfo(src)
     target_message = message
-    res.data = res.private_message(
-        user_id = '',
-        message = '',
-        sub_type = 'private'
-    )
+    res.data = res.private_message(user_id='', message='', sub_type='private')
     res.plugin_info['func_type'] = 'private_message'
     if type(src.data) is OlivOS.API.Event.private_message:
         res.active = True
@@ -109,11 +100,9 @@ def getReRxEvent_private_message(src:OlivOS.API.Event, message:str):
 
     return res
 
-def getReRxEvent_message_format(target:OlivOS.API.Event, message:str):
-    target.data.message_sdk = OlivOS.messageAPI.Message_templet(
-        mode_rx = 'old_string',
-        data_raw = message
-    )
+
+def getReRxEvent_message_format(target: OlivOS.API.Event, message: str):
+    target.data.message_sdk = OlivOS.messageAPI.Message_templet(mode_rx='old_string', data_raw=message)
     target.data.message_sdk.data_raw = target.data.message_sdk.get(target.plugin_info['message_mode_rx'])
     target.data.message_sdk.mode_rx = target.plugin_info['message_mode_rx']
     target.data.message = target.data.message_sdk.get(target.plugin_info['message_mode_tx'])

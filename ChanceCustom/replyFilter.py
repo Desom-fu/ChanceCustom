@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
@@ -24,7 +24,8 @@ import hashlib
 
 gPreFilterLock = threading.Lock()
 
-def preFilter(replyKey:str, replyValue:str, valDict:dict):
+
+def preFilter(replyKey: str, replyValue: str, valDict: dict):
     res = True
     flagSkip = False
 
@@ -36,30 +37,25 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
         releaseDir('./plugin/data')
         releaseDir('./plugin/data/ChanceCustom')
         bot_hash = 'unity'
-        plugin_event:'OlivOS.API.Event|None' = None
+        plugin_event: 'OlivOS.API.Event|None' = None
         user_hash = None
         if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
             bot_hash = valDict['innerVal']['plugin_event'].bot_info.hash
         if 'plugin_event' in valDict['innerVal']:
             plugin_event = valDict['innerVal']['plugin_event']
         if plugin_event != None:
-            user_hash = getUserHash(
-                plugin_event.data.user_id,
-                'user',
-                plugin_event.platform['platform']
-            )
+            user_hash = getUserHash(plugin_event.data.user_id, 'user', plugin_event.platform['platform'])
         if not flagSkip:
             if '【主人】' in replyValue and plugin_event != None:
                 if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
                     try:
                         import OlivaDiceCore
+
                         if not OlivaDiceCore.ordinaryInviteManager.isInMasterList(
                             bot_hash,
                             OlivaDiceCore.userConfig.getUserHash(
-                                plugin_event.data.user_id,
-                                'user',
-                                plugin_event.platform['platform']
-                            )
+                                plugin_event.data.user_id, 'user', plugin_event.platform['platform']
+                            ),
                         ):
                             getPreFilterReply('权限限制', valDict)
                             res = False
@@ -68,34 +64,31 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                         pass
         if not flagSkip:
             if '【群管】' in replyValue and plugin_event != None:
-                if 'role' in plugin_event.data.sender and \
-                    plugin_event.data.sender['role'] not in ['admin', 'onwer']:
-                        getPreFilterReply('权限限制', valDict)
-                        res = False
-                        flagSkip = True
+                if 'role' in plugin_event.data.sender and plugin_event.data.sender['role'] not in ['admin', 'onwer']:
+                    getPreFilterReply('权限限制', valDict)
+                    res = False
+                    flagSkip = True
         if not flagSkip:
             if '【管理】' in replyValue and plugin_event != None:
                 if 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
                     try:
                         import OlivaDiceCore
+
                         if not OlivaDiceCore.ordinaryInviteManager.isInMasterList(
                             bot_hash,
                             OlivaDiceCore.userConfig.getUserHash(
-                                plugin_event.data.user_id,
-                                'user',
-                                plugin_event.platform['platform']
-                            )
+                                plugin_event.data.user_id, 'user', plugin_event.platform['platform']
+                            ),
                         ):
                             getPreFilterReply('权限限制', valDict)
                             res = False
                             flagSkip = True
                     except:
                         pass
-                if 'role' in plugin_event.data.sender and \
-                    plugin_event.data.sender['role'] not in ['admin', 'onwer']:
-                        getPreFilterReply('权限限制', valDict)
-                        res = False
-                        flagSkip = True
+                if 'role' in plugin_event.data.sender and plugin_event.data.sender['role'] not in ['admin', 'onwer']:
+                    getPreFilterReply('权限限制', valDict)
+                    res = False
+                    flagSkip = True
         if not flagSkip:
             res_re = re.match('[\s\S]*【回复间隔(\d+)】', replyValue)
             if res_re != None and plugin_event != None:
@@ -104,29 +97,19 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
-                    lastTime = ChanceCustom.replyJson.jsonGetFunTemp()({})(
-                        {
-                            '文件路径': './plugin/data/ChanceCustom/冷却.json',
-                            '默认值': '0',
-                            '...': [
-                                str(bot_hash),
-                                str(valDict['innerVal']['chat_id'])
-                            ]
-                        }
-                    )
+                    lastTime = ChanceCustom.replyJson.jsonGetFunTemp()({})({
+                        '文件路径': './plugin/data/ChanceCustom/冷却.json',
+                        '默认值': '0',
+                        '...': [str(bot_hash), str(valDict['innerVal']['chat_id'])],
+                    })
                     lastTime = str2int(lastTime)
                     if nowTime > lastTime + setCount:
                         res = True
-                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'default')({})(
-                            {
-                                '文件路径': './plugin/data/ChanceCustom/冷却.json',
-                                '写入值': str(nowTime),
-                                '...': [
-                                    str(bot_hash),
-                                    str(valDict['innerVal']['chat_id'])
-                                ]
-                            }
-                        )
+                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType='default')({})({
+                            '文件路径': './plugin/data/ChanceCustom/冷却.json',
+                            '写入值': str(nowTime),
+                            '...': [str(bot_hash), str(valDict['innerVal']['chat_id'])],
+                        })
                     else:
                         res = False
                         flagSkip = True
@@ -139,33 +122,19 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
-                    lastTime = ChanceCustom.replyJson.jsonGetFunTemp()({})(
-                        {
-                            '文件路径': './plugin/data/ChanceCustom/间隔.json',
-                            '默认值': '0',
-                            '...': [
-                                str(bot_hash),
-                                str(valDict['innerVal']['chat_id']),
-                                user_hash,
-                                str(replyKey)
-                            ]
-                        }
-                    )
+                    lastTime = ChanceCustom.replyJson.jsonGetFunTemp()({})({
+                        '文件路径': './plugin/data/ChanceCustom/间隔.json',
+                        '默认值': '0',
+                        '...': [str(bot_hash), str(valDict['innerVal']['chat_id']), user_hash, str(replyKey)],
+                    })
                     lastTime = str2int(lastTime)
                     if nowTime > lastTime + setCount * 60:
                         res = True
-                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'default')({})(
-                            {
-                                '文件路径': './plugin/data/ChanceCustom/间隔.json',
-                                '写入值': str(nowTime),
-                                '...': [
-                                    str(bot_hash),
-                                    str(valDict['innerVal']['chat_id']),
-                                    user_hash,
-                                    str(replyKey)
-                                ]
-                            }
-                        )
+                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType='default')({})({
+                            '文件路径': './plugin/data/ChanceCustom/间隔.json',
+                            '写入值': str(nowTime),
+                            '...': [str(bot_hash), str(valDict['innerVal']['chat_id']), user_hash, str(replyKey)],
+                        })
                     else:
                         res = False
                         flagSkip = True
@@ -179,35 +148,31 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
-                    lastCount = ChanceCustom.replyJson.jsonGetFunTemp()({})(
-                        {
+                    lastCount = ChanceCustom.replyJson.jsonGetFunTemp()({})({
+                        '文件路径': './plugin/data/ChanceCustom/上限.json',
+                        '默认值': '0',
+                        '...': [
+                            str(bot_hash),
+                            str(time.strftime('%Y-%m', time.localtime(nowTime))),
+                            str(valDict['innerVal']['chat_id']),
+                            user_hash,
+                            str(replyKey),
+                        ],
+                    })
+                    lastCount = str2int(lastCount)
+                    if lastCount < setCount:
+                        res = True
+                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType='default')({})({
                             '文件路径': './plugin/data/ChanceCustom/上限.json',
-                            '默认值': '0',
+                            '写入值': str(lastCount + 1),
                             '...': [
                                 str(bot_hash),
                                 str(time.strftime('%Y-%m', time.localtime(nowTime))),
                                 str(valDict['innerVal']['chat_id']),
                                 user_hash,
-                                str(replyKey)
-                            ]
-                        }
-                    )
-                    lastCount = str2int(lastCount)
-                    if lastCount < setCount:
-                        res = True
-                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'default')({})(
-                            {
-                                '文件路径': './plugin/data/ChanceCustom/上限.json',
-                                '写入值': str(lastCount + 1),
-                                '...': [
-                                    str(bot_hash),
-                                    str(time.strftime('%Y-%m', time.localtime(nowTime))),
-                                    str(valDict['innerVal']['chat_id']),
-                                    user_hash,
-                                    str(replyKey)
-                                ]
-                            }
-                        )
+                                str(replyKey),
+                            ],
+                        })
                     else:
                         res = False
                         flagSkip = True
@@ -220,35 +185,31 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
-                    lastCount = ChanceCustom.replyJson.jsonGetFunTemp()({})(
-                        {
+                    lastCount = ChanceCustom.replyJson.jsonGetFunTemp()({})({
+                        '文件路径': './plugin/data/ChanceCustom/上限.json',
+                        '默认值': '0',
+                        '...': [
+                            str(bot_hash),
+                            str(time.strftime('%Y/%V', time.localtime(nowTime))),
+                            str(valDict['innerVal']['chat_id']),
+                            user_hash,
+                            str(replyKey),
+                        ],
+                    })
+                    lastCount = str2int(lastCount)
+                    if lastCount < setCount:
+                        res = True
+                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType='default')({})({
                             '文件路径': './plugin/data/ChanceCustom/上限.json',
-                            '默认值': '0',
+                            '写入值': str(lastCount + 1),
                             '...': [
                                 str(bot_hash),
                                 str(time.strftime('%Y/%V', time.localtime(nowTime))),
                                 str(valDict['innerVal']['chat_id']),
                                 user_hash,
-                                str(replyKey)
-                            ]
-                        }
-                    )
-                    lastCount = str2int(lastCount)
-                    if lastCount < setCount:
-                        res = True
-                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'default')({})(
-                            {
-                                '文件路径': './plugin/data/ChanceCustom/上限.json',
-                                '写入值': str(lastCount + 1),
-                                '...': [
-                                    str(bot_hash),
-                                    str(time.strftime('%Y/%V', time.localtime(nowTime))),
-                                    str(valDict['innerVal']['chat_id']),
-                                    user_hash,
-                                    str(replyKey)
-                                ]
-                            }
-                        )
+                                str(replyKey),
+                            ],
+                        })
                     else:
                         res = False
                         flagSkip = True
@@ -261,35 +222,31 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
                     setCount = int(res_re_list[0])
                     if setCount <= 0:
                         setCount = 1
-                    lastCount = ChanceCustom.replyJson.jsonGetFunTemp()({})(
-                        {
+                    lastCount = ChanceCustom.replyJson.jsonGetFunTemp()({})({
+                        '文件路径': './plugin/data/ChanceCustom/上限.json',
+                        '默认值': '0',
+                        '...': [
+                            str(bot_hash),
+                            str(time.strftime('%Y-%m-%d', time.localtime(nowTime))),
+                            str(valDict['innerVal']['chat_id']),
+                            user_hash,
+                            str(replyKey),
+                        ],
+                    })
+                    lastCount = str2int(lastCount)
+                    if lastCount < setCount:
+                        res = True
+                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType='default')({})({
                             '文件路径': './plugin/data/ChanceCustom/上限.json',
-                            '默认值': '0',
+                            '写入值': str(lastCount + 1),
                             '...': [
                                 str(bot_hash),
                                 str(time.strftime('%Y-%m-%d', time.localtime(nowTime))),
                                 str(valDict['innerVal']['chat_id']),
                                 user_hash,
-                                str(replyKey)
-                            ]
-                        }
-                    )
-                    lastCount = str2int(lastCount)
-                    if lastCount < setCount:
-                        res = True
-                        ChanceCustom.replyJson.jsonSetFunTemp(flagValType = 'default')({})(
-                            {
-                                '文件路径': './plugin/data/ChanceCustom/上限.json',
-                                '写入值': str(lastCount + 1),
-                                '...': [
-                                    str(bot_hash),
-                                    str(time.strftime('%Y-%m-%d', time.localtime(nowTime))),
-                                    str(valDict['innerVal']['chat_id']),
-                                    user_hash,
-                                    str(replyKey)
-                                ]
-                            }
-                        )
+                                str(replyKey),
+                            ],
+                        })
                     else:
                         res = False
                         flagSkip = True
@@ -301,7 +258,8 @@ def preFilter(replyKey:str, replyValue:str, valDict:dict):
 
     return res
 
-def getPreFilterReply(key:str, valDict:dict):
+
+def getPreFilterReply(key: str, valDict: dict):
     bot_hash = 'unity'
     res = None
     if 'plugin_event' in valDict['innerVal'] and valDict['innerVal']['plugin_event'] != None:
@@ -310,6 +268,7 @@ def getPreFilterReply(key:str, valDict:dict):
     if bot_hash != 'unity' and 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
         try:
             import OlivaDiceCore
+
             redirected_bot_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(bot_hash)
         except:
             redirected_bot_hash = bot_hash
@@ -323,20 +282,23 @@ def getPreFilterReply(key:str, valDict:dict):
     valDict['innerVal']['replaceReply'] = res
     return res
 
-def getPreFilterFunTemp(key:str):
+
+def getPreFilterFunTemp(key: str):
     def getPreFilterFun(valDict):
-        def getPreFilter_f(matched:'re.Match|dict'):
+        def getPreFilter_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            if 'innerVal' in valDict and key in valDict['innerVal'] and \
-                valDict['innerVal'][key] != None:
+            if 'innerVal' in valDict and key in valDict['innerVal'] and valDict['innerVal'][key] != None:
                 res = valDict['innerVal'][key]
             return res
+
         return getPreFilter_f
+
     return getPreFilterFun
 
-def str2int(value:str):
+
+def str2int(value: str):
     res = 0
     try:
         res = int(value)
@@ -344,11 +306,13 @@ def str2int(value:str):
         res = 0
     return res
 
+
 def releaseDir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 
-def getUserHash(userId, userType, platform, subId = None):
+
+def getUserHash(userId, userType, platform, subId=None):
     hash_tmp = hashlib.new('md5')
     if subId != None:
         tmp_strID = '%s|%s' % (str(subId), str(userId))

@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
@@ -29,13 +29,16 @@ PRIORITY = {}
 LOGIC_OPERATORS = {}
 LOGIC_PRIORITY = {}
 
+
 def addOperator(*names_and_prios):
     def add(fn):
         for name, priority in names_and_prios:
             OPERATORS[name] = fn
             PRIORITY[name] = priority
         return fn
+
     return add
+
 
 def addLogicOperator(*names_and_prios):
     def add(fn):
@@ -43,15 +46,19 @@ def addLogicOperator(*names_and_prios):
             LOGIC_OPERATORS[name] = fn
             LOGIC_PRIORITY[name] = priority
         return fn
+
     return add
+
 
 @addOperator(('+', 10))
 def operatorAdd(x, y):
     return operator.add(x, y)
 
+
 @addOperator(('-', 10))
 def operatorSub(x, y):
     return operator.sub(x, y)
+
 
 @addOperator(('/', 11), ('÷', 11))
 def operatorDiv(x, y):
@@ -60,43 +67,53 @@ def operatorDiv(x, y):
     except ZeroDivisionError:
         return float('inf')
 
+
 @addOperator(('*', 11), ('×', 11))
 def operatorMul(x, y):
     return operator.mul(x, y)
 
+
 @addOperator(('%', 11))
 def operatorMod(x, y):
     return divmod(x, y)[1]
+
 
 @addOperator(('<', 9))
 def operatorSLB(x, y):
     x, y = int(x), int(y)
     return operator.lshift(x, y)
 
+
 @addOperator(('>', 9))
 def operatorSRB(x, y):
     x, y = int(x), int(y)
     return operator.rshift(x, y)
 
+
 @addOperator(('&', 8))
 def operatorAnd(x, y):
     return operator.and_(x, y)
+
 
 @addOperator(('|', 6))
 def operatorOr(x, y):
     return operator.or_(x, y)
 
+
 @addOperator(('⊕', 7))
 def operatorXor(x, y):
     return operator.xor(x, y)
+
 
 @addOperator(('^', 13))
 def operatorPow(x, y):
     return operator.pow(x, y)
 
+
 @addOperator(('\\', 11))
 def operatorQuotient(x, y):
     return divmod(x, y)[0]
+
 
 @addOperator(('@', 11))
 def operatorRound(x, y):
@@ -105,21 +122,26 @@ def operatorRound(x, y):
     else:
         return round(x, y)
 
+
 @addLogicOperator(('&&', 3), ('且', 3))
 def operatorAnd(x, y):
     return x and y
+
 
 @addLogicOperator(('||', 2), ('或', 2))
 def operatorOr(x, y):
     return x or y
 
+
 @addLogicOperator(('+', 10))
 def operatorAdd(x, y):
     return operator.add(x, y)
 
+
 @addLogicOperator(('-', 10))
 def operatorSub(x, y):
     return operator.sub(x, y)
+
 
 @addLogicOperator(('/', 11))
 def operatorDiv(x, y):
@@ -128,65 +150,81 @@ def operatorDiv(x, y):
     except ZeroDivisionError:
         return float('inf')
 
+
 @addLogicOperator(('*', 11))
 def operatorMul(x, y):
     return operator.mul(x, y)
+
 
 @addLogicOperator(('%', 11))
 def operatorMod(x, y):
     return divmod(x, y)[1]
 
+
 @addLogicOperator(('\\', 11))
 def operatorQuotient(x, y):
     return divmod(x, y)[0]
+
 
 @addLogicOperator(('<', 5))
 def operatorLess(x, y):
     return operator.lt(x, y)
 
+
 @addLogicOperator(('>', 5))
 def operatorGreater(x, y):
     return operator.gt(x, y)
+
 
 @addLogicOperator(('<=', 5))
 def operatorLessEqual(x, y):
     return operator.le(x, y)
 
+
 @addLogicOperator(('>=', 5))
 def operatorGreaterEqual(x, y):
     return operator.ge(x, y)
+
 
 @addLogicOperator(('=', 5))
 def operatorEqual(x, y):
     return operator.eq(x, y)
 
+
 @addLogicOperator(('!=', 5))
 def operatorNotEqual(x, y):
     return operator.ne(x, y)
+
 
 @addLogicOperator(('==', 5))
 def operatorIdentity(x, y):
     return operator.is_(x, y)
 
+
 @addLogicOperator(('!==', 5))
 def operatorNotIdentity(x, y):
     return operator.is_not(x, y)
+
 
 @addLogicOperator(('in', 5))
 def operatorIn(x, y):
     return operator.contains(str(y), str(x))
 
+
 @addLogicOperator(('!in', 5))
 def operatorNotIn(x, y):
     return not operator.contains(str(y), str(x))
+
 
 @addLogicOperator(('reg', 5))
 def operatorRegMatch(x, y):
     return operator.truth(re.search(str(x), str(y)))
 
+
 @addLogicOperator(('!reg', 5))
 def operatorRegNotMatch(x, y):
     return re.search(str(x), str(y)) == None
+
 
 class Symbol:
     _BINARY_OPERATOR = set('+-*×/÷%\^@&|⊕<>')
@@ -194,18 +232,29 @@ class Symbol:
     _NUMERAL_START = set(digits) | set('.')
     _NUMERAL_END = set(digits)
     _SINGLE_CHAR_TOKENS = set('(),（），') | _BINARY_OPERATOR
-    _VALID_CHAR = (_BINARY_OPERATOR | _NUMERAL_START | _NUMERAL_END)
+    _VALID_CHAR = _BINARY_OPERATOR | _NUMERAL_START | _NUMERAL_END
+
 
 class Lexer:
-    def __init__(self, string:str):
+    def __init__(self, string: str):
         self.string = self.preprocess(string)
 
     def preprocess(self, string):
-        return '(' + string.replace(' ', '').replace('<<', '<').replace('>>', '>') \
-            .replace('and', '&').replace('xor', '⊕').replace('or', '|') + ')'
-    
+        return (
+            '('
+            + string
+            .replace(' ', '')
+            .replace('<<', '<')
+            .replace('>>', '>')
+            .replace('and', '&')
+            .replace('xor', '⊕')
+            .replace('or', '|')
+            + ')'
+        )
+
     def tokenGenerator(self):
         k = 0
+
         def getNextToken():
             nonlocal k
             minus = False
@@ -213,7 +262,7 @@ class Lexer:
                 c = self.string[k]
                 if c in Symbol._WHITESPACE:
                     k += 1
-                elif c == '-' and self.string[k-1] in Symbol._BINARY_OPERATOR | set('(（'):
+                elif c == '-' and self.string[k - 1] in Symbol._BINARY_OPERATOR | set('(（'):
                     minus = True
                     k += 1
                 elif c in Symbol._SINGLE_CHAR_TOKENS:
@@ -221,7 +270,7 @@ class Lexer:
                     return c
                 else:
                     i = k
-                    number= False
+                    number = False
                     while i < len(self.string):
                         char = self.string[i]
                         if not number and char in Symbol._NUMERAL_START:
@@ -242,7 +291,9 @@ class Lexer:
                                 return token
                         else:
                             i += 1
+
         return getNextToken
+
 
 def customEval(get_one_token):
     operator_stack = []
@@ -267,7 +318,7 @@ def customEval(get_one_token):
                     right = operand_stack.pop()
                     left = operand_stack.pop()
                     operand_stack.append(OPERATORS[operator](left, right))
-                    operator_stack.append(token)        
+                    operator_stack.append(token)
         elif token in set('(（'):
             operand_stack.append(customEval(get_one_token))
         elif token in set(')）'):
@@ -290,6 +341,7 @@ def customEval(get_one_token):
     left = operand_stack.pop()
     return OPERATORS[operator](left, right)
 
+
 class LogicSymbol:
     _BINARY_OPERATOR = set('+-*/\\%')
     _SINGLE_CHAR_OPERATOR = _BINARY_OPERATOR | set('或且')
@@ -304,18 +356,20 @@ class LogicSymbol:
     _MULTI_CHAR_OPERATOR = _MULTI_CHAR_OPERATOR_MID | _MULTI_CHAR_OPERATOR_END
     _SINGLE_CHAR_TOKENS = _SINGLE_CHAR_OPERAND | _SINGLE_CHAR_OPERATOR | set('()')
 
+
 class LogicOperator:
-    def __init__(self, op:str):
+    def __init__(self, op: str):
         self.op = op
-    
+
     def __str__(self):
         return self.op
 
+
 class LogicLexer:
-    def __init__(self, string:str):
+    def __init__(self, string: str):
         self.string = string
         self.len = len(string)
-    
+
     def tokenGenerator(self):
         k = 0
 
@@ -323,36 +377,39 @@ class LogicLexer:
             nonlocal k
             i = k
             while i < self.len:
-                if i == self.len-1:
+                if i == self.len - 1:
                     break
                 char = self.string[i]
-                next_char = self.string[i+1]
+                next_char = self.string[i + 1]
                 if next_char in LogicSymbol._NUMERAL_END:
                     i += 1
-                elif next_char not in LogicSymbol._SINGLE_CHAR_OPERATOR | \
-                        LogicSymbol._MULTI_CHAR_OPERATOR_START | set('()'):
+                elif next_char not in LogicSymbol._SINGLE_CHAR_OPERATOR | LogicSymbol._MULTI_CHAR_OPERATOR_START | set(
+                    '()'
+                ):
                     return -1
                 else:
                     break
             offset = i - k + 1
             return offset
-        
+
         def matchOperator():
             nonlocal k
             i = k
             while i < self.len:
-                if i == self.len-1:
+                if i == self.len - 1:
                     break
                 char = self.string[i]
-                next_char = self.string[i+1]
+                next_char = self.string[i + 1]
                 if next_char in LogicSymbol._MULTI_CHAR_OPERATOR:
                     i += 1
-                elif char in LogicSymbol._MULTI_CHAR_OPERATOR_END \
-                        and next_char not in LogicSymbol._MULTI_CHAR_OPERATOR_END:
+                elif (
+                    char in LogicSymbol._MULTI_CHAR_OPERATOR_END
+                    and next_char not in LogicSymbol._MULTI_CHAR_OPERATOR_END
+                ):
                     i += 1
                     break
                 else:
-                    raise TypeError("invalid operator")
+                    raise TypeError('invalid operator')
             offset = i - k
             return offset
 
@@ -364,8 +421,7 @@ class LogicLexer:
                 c = self.string[k]
                 if not in_string and c in LogicSymbol._WHITESPACE:
                     k += 1
-                elif not in_string and c == '-' and \
-                        self.string[k-1] in LogicSymbol._BINARY_OPERATOR | set('(（'):
+                elif not in_string and c == '-' and self.string[k - 1] in LogicSymbol._BINARY_OPERATOR | set('(（'):
                     minus = True
                     k += 1
                 elif not in_string and not str_buffer and c in LogicSymbol._SINGLE_CHAR_TOKENS:
@@ -383,8 +439,12 @@ class LogicLexer:
                     k += 1
                     tmp, str_buffer = str_buffer, ''
                     return tmp
-                elif not in_string and str_buffer and c in LogicSymbol._OPERATOR_START \
-                        and self.string[k-1] not in LogicSymbol._OPERATOR_START:
+                elif (
+                    not in_string
+                    and str_buffer
+                    and c in LogicSymbol._OPERATOR_START
+                    and self.string[k - 1] not in LogicSymbol._OPERATOR_START
+                ):
                     tmp, str_buffer = str_buffer, ''
                     return tmp
                 elif not in_string and not str_buffer and c in LogicSymbol._NUMERAL_START:
@@ -393,7 +453,7 @@ class LogicLexer:
                         str_buffer += c
                         k += 1
                         continue
-                    token = self.string[k:k+offset]
+                    token = self.string[k : k + offset]
                     k += offset
                     if '.' in token:
                         num = float(token)
@@ -403,8 +463,8 @@ class LogicLexer:
                     minus = False
                     return num
                 elif not in_string and c in LogicSymbol._MULTI_CHAR_OPERATOR_START:
-                    offset = matchOperator()         
-                    token = self.string[k:k+offset]
+                    offset = matchOperator()
+                    token = self.string[k : k + offset]
                     k += offset
                     return LogicOperator(token)
                 else:
@@ -413,7 +473,9 @@ class LogicLexer:
             if str_buffer:
                 tmp, str_buffer = str_buffer, ''
                 return tmp
+
         return getNextToken
+
 
 def logicEval(get_one_token):
     operator_stack = []
@@ -426,7 +488,7 @@ def logicEval(get_one_token):
             if not len(operator_stack):
                 operator_stack.append(token)
             else:
-                operator:LogicOperator = operator_stack.pop()
+                operator: LogicOperator = operator_stack.pop()
                 assert isinstance(operator, LogicOperator)
                 if LOGIC_PRIORITY[token.op] > LOGIC_PRIORITY[operator.op]:
                     right = get_one_token()
@@ -439,27 +501,28 @@ def logicEval(get_one_token):
                     right = operand_stack.pop()
                     left = operand_stack.pop()
                     operand_stack.append(LOGIC_OPERATORS[operator.op](left, right))
-                    operator_stack.append(token)        
+                    operator_stack.append(token)
         elif token in set('('):
             operand_stack.append(logicEval(get_one_token))
         elif token in set(')'):
             if not operator_stack and len(operand_stack) == 1:
                 return operand_stack[0]
-            operator:LogicOperator = operator_stack.pop()
+            operator: LogicOperator = operator_stack.pop()
             right = operand_stack.pop()
             left = operand_stack.pop()
             return LOGIC_OPERATORS[operator.op](left, right)
         token = get_one_token()
     if not operator_stack and len(operand_stack) == 1:
         return operand_stack[0]
-    operator:LogicOperator = operator_stack.pop()
+    operator: LogicOperator = operator_stack.pop()
     right = operand_stack.pop()
     left = operand_stack.pop()
     return LOGIC_OPERATORS[operator.op](left, right)
 
+
 def evalExprFunTemp():
     def evalExprFun(valDict):
-        def evalExpr_f(matched:'re.Match|dict'):
+        def evalExpr_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -470,12 +533,15 @@ def evalExprFunTemp():
             except:
                 res = str(float('nan'))
             return res
+
         return evalExpr_f
+
     return evalExprFun
+
 
 def logicEvalExprFunTemp():
     def logicEvalExprFun(valDict):
-        def logicEvalExpr_f(matched:'re.Match|dict'):
+        def logicEvalExpr_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -487,37 +553,96 @@ def logicEvalExprFunTemp():
             except:
                 res = '[逻辑]表达式含有语法错误'
             return res
+
         return logicEvalExpr_f
+
     return logicEvalExprFun
+
 
 def baseConvFunTmp():
     def encode(num, base):
         base_table = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/'
         result = []
         while num > 0:
-            result.append(base_table[num%base])
+            result.append(base_table[num % base])
             num //= base
         return ''.join(reversed(result))
+
     def decode(num_str, base):
         num_str = num_str.replace('-', '+').replace('_', '/')
         base_table = {
-            "0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9,
-            "a": 10, "b": 11, "c": 12, "d": 13, "e": 14, "f": 15, "g": 16,
-            "h": 17, "i": 18, "j": 19, "k": 20, "l": 21, "m": 22, "n": 23,
-            "o": 24, "p": 25, "q": 26, "r": 27, "s": 28, "t": 29, "u": 30,
-            "v": 31, "w": 32, "x": 33, "y": 34, "z": 35,
-            "A": 36, "B": 37, "C": 38, "D": 39, "E": 40, "F": 41, "G": 42,
-            "H": 43, "I": 44, "J": 45, "K": 46, "L": 47, "M": 48, "N": 49,
-            "O": 50, "P": 51, "Q": 52, "R": 53, "S": 54, "T": 55, "U": 56,
-            "V": 57, "W": 58, "X": 59, "Y": 60, "Z": 61,
-            "+": 62, "/": 63
+            '0': 0,
+            '1': 1,
+            '2': 2,
+            '3': 3,
+            '4': 4,
+            '5': 5,
+            '6': 6,
+            '7': 7,
+            '8': 8,
+            '9': 9,
+            'a': 10,
+            'b': 11,
+            'c': 12,
+            'd': 13,
+            'e': 14,
+            'f': 15,
+            'g': 16,
+            'h': 17,
+            'i': 18,
+            'j': 19,
+            'k': 20,
+            'l': 21,
+            'm': 22,
+            'n': 23,
+            'o': 24,
+            'p': 25,
+            'q': 26,
+            'r': 27,
+            's': 28,
+            't': 29,
+            'u': 30,
+            'v': 31,
+            'w': 32,
+            'x': 33,
+            'y': 34,
+            'z': 35,
+            'A': 36,
+            'B': 37,
+            'C': 38,
+            'D': 39,
+            'E': 40,
+            'F': 41,
+            'G': 42,
+            'H': 43,
+            'I': 44,
+            'J': 45,
+            'K': 46,
+            'L': 47,
+            'M': 48,
+            'N': 49,
+            'O': 50,
+            'P': 51,
+            'Q': 52,
+            'R': 53,
+            'S': 54,
+            'T': 55,
+            'U': 56,
+            'V': 57,
+            'W': 58,
+            'X': 59,
+            'Y': 60,
+            'Z': 61,
+            '+': 62,
+            '/': 63,
         }
         result = 0
         for i in range(len(num_str)):
             result = result * base + base_table[num_str[i]]
         return result
+
     def baseConvFun(valDict):
-        def baseConv_f(matched:'re.Match|dict'):
+        def baseConv_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -531,12 +656,15 @@ def baseConvFunTmp():
             dst_base = int(dst_base) if dst_base.isdigit() else table.get(dst_base, 10)
             res = encode(decode(resDict['待转化数值'], src_base), dst_base)
             return res
+
         return baseConv_f
+
     return baseConvFun
 
-def splitSortFunTemp(type="sort"):
+
+def splitSortFunTemp(type='sort'):
     def splitSortFun(valDict):
-        def splitSort_f(matched:'re.Match|dict'):
+        def splitSort_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -592,12 +720,15 @@ def splitSortFunTemp(type="sort"):
                         sortedDataList = sorted(dataMap.items(), key=lambda x: x[0], reverse=reverseFlag)
                     res = '\n'.join(map(lambda x: x[1], sortedDataList))
             return res
+
         return splitSort_f
+
     return splitSortFun
+
 
 def wordCountFunTemp():
     def wordCountFun(valDict):
-        def wordCount_f(matched:'re.Match|dict'):
+        def wordCount_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -609,8 +740,11 @@ def wordCountFunTemp():
             else:
                 res = str(resDict['被统计文本'].count(pattern))
             return res
+
         return wordCount_f
+
     return wordCountFun
+
 
 def getMD5FunTemp():
     def readFile(path):
@@ -619,6 +753,7 @@ def getMD5FunTemp():
                 return f.read()
         except:
             return ''
+
     def readOnlineFile(url):
         try:
             res = requests.get(url, timeout=10)
@@ -628,8 +763,9 @@ def getMD5FunTemp():
                 raise
         except:
             return ''
+
     def getMD5Fun(valDict):
-        def getMD5_f(matched:'re.Match|dict'):
+        def getMD5_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -641,7 +777,7 @@ def getMD5FunTemp():
             context = resDict['被取目标']
             content = ''
             if re.match(CQ_code_pattern, context):
-                file_or_url = re.match( CQ_code_pattern, context).groupdict()
+                file_or_url = re.match(CQ_code_pattern, context).groupdict()
                 file, url = file_or_url['file'], file_or_url['url']
                 if file[6:13] == 'file://' and re.match(file_pattern, file[13:]):
                     content = readFile(file[13:])
@@ -654,27 +790,29 @@ def getMD5FunTemp():
             elif re.match(url_pattern, context):
                 content = readOnlineFile(context)
             else:
-                content = context    
+                content = context
             md = hashlib.md5()
             try:
                 if not content:
                     res = '出现错误'
                 elif isinstance(content, bytes):
                     md.update(content)
-                    res = md.hexdigest()[:resDict['MD5位数']].upper()
+                    res = md.hexdigest()[: resDict['MD5位数']].upper()
                 else:
                     md.update(content.encode('utf-8'))
-                    res += md.hexdigest()[:resDict['MD5位数']].upper()
+                    res += md.hexdigest()[: resDict['MD5位数']].upper()
             except:
                 res = '出现错误'
             return res
+
         return getMD5_f
+
     return getMD5Fun
 
 
 def charPaddingFunTemp():
     def charPaddingFun(valDict):
-        def charPadding_f(matched:'re.Match|dict'):
+        def charPadding_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -689,13 +827,14 @@ def charPaddingFunTemp():
             if offset < 0:
                 res = text
             else:
-                
                 if resDict['结尾/开头'] == '开头':
                     res = (char * offset)[:offset] + text
                 elif resDict['结尾/开头'] == '结尾':
-                    res =  text + (char * offset)[:offset]
+                    res = text + (char * offset)[:offset]
                 else:
                     res = text
             return res
+
         return charPadding_f
+
     return charPaddingFun

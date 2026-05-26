@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
@@ -23,7 +23,7 @@ from datetime import datetime, timedelta, timezone
 
 def time2TextFunTemp():
     def time2TextFun(valDict):
-        def time2Text_f(matched:'re.Match|dict'):
+        def time2Text_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -34,23 +34,31 @@ def time2TextFunTemp():
             except ValueError:
                 res = '错误的时间文本格式'
             return res
+
         return time2Text_f
+
     return time2TextFun
 
-def getTimestampFunTemp(length:int):
+
+def getTimestampFunTemp(length: int):
     def getTimestampFun(valDict):
-        def getTimestamp_f(matched:'re.Match|dict'):
+        def getTimestamp_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
             res = str(time.time()).replace('.', '')[:length]
             return res
+
         return getTimestamp_f
+
     return getTimestampFun
+
 
 def getTimeIntervalFunTemp():
     def str2timestamp(time):
-        time_pattern1 = '(\d{4})[- \/.年](\d{1,2})[- \/.月](\d{1,2})[- \/.日](\d{1,2})[- :\/.时](\d{1,2})[- :\/.分](\d{1,2})秒?'
+        time_pattern1 = (
+            '(\d{4})[- \/.年](\d{1,2})[- \/.月](\d{1,2})[- \/.日](\d{1,2})[- :\/.时](\d{1,2})[- :\/.分](\d{1,2})秒?'
+        )
         time_pattern2 = '(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})'
         if time.isdigit():
             match = re.match(time_pattern2, time)
@@ -62,9 +70,9 @@ def getTimeIntervalFunTemp():
             if match is None:
                 raise ValueError('错误的时间文本格式')
             return datetime(*map(int, match.groups())).astimezone(timezone(timedelta(hours=8))).timestamp()
-        
+
     def getTimeIntervalFun(valDict):
-        def getTimeInterval_f(matched:'re.Match|dict'):
+        def getTimeInterval_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -76,17 +84,36 @@ def getTimeIntervalFunTemp():
             except ValueError:
                 res = '错误的时间文本格式'
             return res
+
         return getTimeInterval_f
+
     return getTimeIntervalFun
 
+
 def getTimeOrDateFunTemp(type):
-    weekdayDict = {'Monday': '星期一', 'Tuesday': '星期二', 'Wednesday': '星期三',
-                   'Thursday': '星期四', 'Friday': '星期五', 'Saturday': '星期六', 'Sunday': '星期日'}
-    typeDict = {'年': '%Y', '月': '%m', '日': '%d', '星期': '%A',
-                '时': '%H', '分': '%M', '秒': '%S',
-                'date': '%Y-%m-%d', 'time': '%H:%M:%S'}
+    weekdayDict = {
+        'Monday': '星期一',
+        'Tuesday': '星期二',
+        'Wednesday': '星期三',
+        'Thursday': '星期四',
+        'Friday': '星期五',
+        'Saturday': '星期六',
+        'Sunday': '星期日',
+    }
+    typeDict = {
+        '年': '%Y',
+        '月': '%m',
+        '日': '%d',
+        '星期': '%A',
+        '时': '%H',
+        '分': '%M',
+        '秒': '%S',
+        'date': '%Y-%m-%d',
+        'time': '%H:%M:%S',
+    }
+
     def getTimeOrDateFun(valDict):
-        def getTimeOrDate_f(matched:'re.Match|dict'):
+        def getTimeOrDate_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -98,5 +125,7 @@ def getTimeOrDateFunTemp(type):
             else:
                 res = weekdayDict[date.strftime(key)] if key == '%A' else date.strftime(key)
             return res
+
         return getTimeOrDate_f
+
     return getTimeOrDateFun

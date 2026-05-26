@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
@@ -21,14 +21,12 @@ import random
 
 globalValDict = {}
 
-def unity_reply(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
-    reply_runtime(
-        plugin_event = plugin_event,
-        Proc = Proc,
-        event_name = event_name
-    )
 
-def getValDictUnity(valDict:dict):
+def unity_reply(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow, event_name: str):
+    reply_runtime(plugin_event=plugin_event, Proc=Proc, event_name=event_name)
+
+
+def getValDictUnity(valDict: dict):
     global globalValDict
     if 'funcValRawGData' in globalValDict:
         valDict['funcValRawGData'] = globalValDict['funcValRawGData'].copy()
@@ -43,7 +41,8 @@ def getValDictUnity(valDict:dict):
         if 'valGOData' in globalValDict and bot_hash in globalValDict['valGOData']:
             valDict['valGOData'] = globalValDict['valGOData'][bot_hash].copy()
 
-def setValDictUnity(valDict:dict):
+
+def setValDictUnity(valDict: dict):
     global globalValDict
     if 'funcValRawGData' in valDict:
         globalValDict['funcValRawGData'] = valDict['funcValRawGData'].copy()
@@ -62,20 +61,20 @@ def setValDictUnity(valDict:dict):
         if 'valGOData' in valDict:
             globalValDict['valGOData'][bot_hash] = valDict['valGOData'].copy()
 
-def getFakePluginEvent(valDict:dict, plugin_event:OlivOS.API.Event, event_name:str, message:str):
+
+def getFakePluginEvent(valDict: dict, plugin_event: OlivOS.API.Event, event_name: str, message: str):
     if 'poke_private' == event_name:
         valDict['innerVal']['plugin_event'] = ChanceCustom.replyEvent.getReRxEvent_private_message(
-            src = plugin_event,
-            message = message
+            src=plugin_event, message=message
         )
     elif 'poke_group' == event_name:
         valDict['innerVal']['plugin_event'] = ChanceCustom.replyEvent.getReRxEvent_group_message(
-            src = plugin_event,
-            message = message
+            src=plugin_event, message=message
         )
 
-def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
-    #内置变量，用于内部调用
+
+def getValDict(valDict: dict, plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow, event_name: str):
+    # 内置变量，用于内部调用
     valDict['innerVal'] = {}
     valDict['innerVal']['plugin_event'] = plugin_event
     valDict['innerVal']['Proc'] = Proc
@@ -118,7 +117,7 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
         valDict['innerVal']['hag_id'] = str(88888888)
         valDict['innerVal']['chat_id'] = 'GROUP:%s' % str(valDict['innerVal']['hag_id'])
 
-    #预设变量，用于供外部调用
+    # 预设变量，用于供外部调用
     valDict['defaultVal'] = {}
     valDict['defaultVal']['当前群号'] = ''
     valDict['defaultVal']['当前频道号'] = ''
@@ -151,7 +150,7 @@ def getValDict(valDict:dict, plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAP
         valDict['defaultVal']['当前群号'] = str(88888888)
 
 
-def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, event_name:str):
+def reply_runtime(plugin_event: OlivOS.API.Event, Proc: OlivOS.pluginAPI.shallow, event_name: str):
     global globalValDict
     tmp_dictCustomData = ChanceCustom.load.dictCustomData
     tmp_hash_list = ['unity', plugin_event.bot_info.hash]
@@ -190,14 +189,9 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
     getValDictUnity(valDict)
 
     if not ChanceCustom.replyContent.contextRegTryHit(
-        message = tmp_message,
-        event_name = event_name,
-        valDict = valDict,
-        bot_hash = plugin_event.bot_info.hash
+        message=tmp_message, event_name=event_name, valDict=valDict, bot_hash=plugin_event.bot_info.hash
     ):
         return
-
-
 
     bot_hash_last = None
     for tmp_hash_list_this in tmp_hash_list:
@@ -208,33 +202,38 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
         if tmp_hash_list_this != 'unity' and 'OlivaDiceCore' in ChanceCustom.load.listPlugin:
             try:
                 import OlivaDiceCore
+
                 redirected_hash = OlivaDiceCore.userConfig.getRedirectedBotHash(tmp_hash_list_this)
             except:
                 redirected_hash = tmp_hash_list_this
         else:
             redirected_hash = tmp_hash_list_this
-        
+
         if redirected_hash in tmp_dictCustomData['data']:
             tmp_dictCustomData_this = tmp_dictCustomData['data'][redirected_hash]
             it_list_tmp_dictCustomData = ChanceCustom.load.getCustomDataSortKeyList(
-                data = tmp_dictCustomData_this,
-                reverse = False
+                data=tmp_dictCustomData_this, reverse=False
             )
             for key_this in it_list_tmp_dictCustomData:
                 flag_matchPlace = int(tmp_dictCustomData_this[key_this]['matchPlace'])
-                
+
                 get_division = False
 
-                if not tmp_dictCustomData_this[key_this].get("division") or \
-                    str(tmp_dictCustomData_this[key_this]["division"]) == "0" or \
-                    str(tmp_dictCustomData_this[key_this]["division"]) == "1":
+                if (
+                    not tmp_dictCustomData_this[key_this].get('division')
+                    or str(tmp_dictCustomData_this[key_this]['division']) == '0'
+                    or str(tmp_dictCustomData_this[key_this]['division']) == '1'
+                ):
                     get_division = True
-                elif 'group_message' == event_name and str(plugin_event.data.group_id) in \
-                    str(tmp_dictCustomData_this[key_this]["division"]).split("*"):
+                elif 'group_message' == event_name and str(plugin_event.data.group_id) in str(
+                    tmp_dictCustomData_this[key_this]['division']
+                ).split('*'):
                     get_division = True
-                elif 'private_message' == event_name and str(plugin_event.data.user_id) in \
-                    str(tmp_dictCustomData_this[key_this]["division"]).split("*") and \
-                    flag_matchPlace & 0b10 != 0:
+                elif (
+                    'private_message' == event_name
+                    and str(plugin_event.data.user_id) in str(tmp_dictCustomData_this[key_this]['division']).split('*')
+                    and flag_matchPlace & 0b10 != 0
+                ):
                     get_division = True
 
                 if (flag_matchPlace_target & flag_matchPlace) != 0 and get_division:
@@ -245,37 +244,28 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                         if res_re != None:
                             tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                             for tmp_value_this in tmp_value.split('[分页]'):
-                                msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                    tmp_value_this,
-                                    valDict
-                                )
+                                msg = ChanceCustom.replyReg.replyValueRegTotal(tmp_value_this, valDict)
                                 if len(msg) > 0:
-                                    reply(
-                                        plugin_event,
-                                        msg
-                                    )
+                                    reply(plugin_event, msg)
                             continue
                     elif 'full' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message == tmp_dictCustomData_this[key_this]['key']:
                             if ChanceCustom.replyFilter.preFilter(
-                                replyKey = tmp_dictCustomData_this[key_this]['key'],
-                                replyValue = tmp_dictCustomData_this[key_this]['value'],
-                                valDict = valDict
+                                replyKey=tmp_dictCustomData_this[key_this]['key'],
+                                replyValue=tmp_dictCustomData_this[key_this]['value'],
+                                valDict=valDict,
                             ):
                                 tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                                 for tmp_value_this in tmp_value.split('[分页]'):
-                                    msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                        tmp_value_this,
-                                        valDict
-                                    )
+                                    msg = ChanceCustom.replyReg.replyValueRegTotal(tmp_value_this, valDict)
                                     if len(msg) > 0:
-                                        reply(
-                                            plugin_event,
-                                            msg
-                                        )
+                                        reply(plugin_event, msg)
                             break
                     elif 'contain' == tmp_dictCustomData_this[key_this]['matchType']:
-                        if tmp_dictCustomData_this[key_this]['key'] != '' and tmp_dictCustomData_this[key_this]['key'] in tmp_message:
+                        if (
+                            tmp_dictCustomData_this[key_this]['key'] != ''
+                            and tmp_dictCustomData_this[key_this]['key'] in tmp_message
+                        ):
                             res_re_list = tmp_message.split(tmp_dictCustomData_this[key_this]['key'])
                             count = 1
                             for res_re_list_this in res_re_list:
@@ -288,41 +278,29 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                 valDict[key] = codeEscape(value)
                                 count += 1
                             if ChanceCustom.replyFilter.preFilter(
-                                replyKey = tmp_dictCustomData_this[key_this]['key'],
-                                replyValue = tmp_dictCustomData_this[key_this]['value'],
-                                valDict = valDict
+                                replyKey=tmp_dictCustomData_this[key_this]['key'],
+                                replyValue=tmp_dictCustomData_this[key_this]['value'],
+                                valDict=valDict,
                             ):
                                 tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                                 for tmp_value_this in tmp_value.split('[分页]'):
-                                    msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                        tmp_value_this,
-                                        valDict
-                                    )
+                                    msg = ChanceCustom.replyReg.replyValueRegTotal(tmp_value_this, valDict)
                                     if len(msg) > 0:
-                                        reply(
-                                            plugin_event,
-                                            msg
-                                        )
+                                        reply(plugin_event, msg)
                             break
                     elif 'perfix' == tmp_dictCustomData_this[key_this]['matchType']:
                         if tmp_message.startswith(tmp_dictCustomData_this[key_this]['key']):
-                            valDict['内容1'] = codeEscape(tmp_message[len(tmp_dictCustomData_this[key_this]['key']):])
+                            valDict['内容1'] = codeEscape(tmp_message[len(tmp_dictCustomData_this[key_this]['key']) :])
                             if ChanceCustom.replyFilter.preFilter(
-                                replyKey = tmp_dictCustomData_this[key_this]['key'],
-                                replyValue = tmp_dictCustomData_this[key_this]['value'],
-                                valDict = valDict
+                                replyKey=tmp_dictCustomData_this[key_this]['key'],
+                                replyValue=tmp_dictCustomData_this[key_this]['value'],
+                                valDict=valDict,
                             ):
                                 tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                                 for tmp_value_this in tmp_value.split('[分页]'):
-                                    msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                        tmp_value_this,
-                                        valDict
-                                    )
+                                    msg = ChanceCustom.replyReg.replyValueRegTotal(tmp_value_this, valDict)
                                     if len(msg) > 0:
-                                        reply(
-                                            plugin_event,
-                                            msg
-                                        )
+                                        reply(plugin_event, msg)
                             break
                     elif 'reg' == tmp_dictCustomData_this[key_this]['matchType']:
                         res_re = re.match('^%s$' % tmp_dictCustomData_this[key_this]['key'], tmp_message)
@@ -339,35 +317,23 @@ def reply_runtime(plugin_event:OlivOS.API.Event, Proc:OlivOS.pluginAPI.shallow, 
                                 valDict[key] = codeEscape(value)
                                 count += 1
                             if ChanceCustom.replyFilter.preFilter(
-                                replyKey = tmp_dictCustomData_this[key_this]['key'],
-                                replyValue = tmp_dictCustomData_this[key_this]['value'],
-                                valDict = valDict
+                                replyKey=tmp_dictCustomData_this[key_this]['key'],
+                                replyValue=tmp_dictCustomData_this[key_this]['value'],
+                                valDict=valDict,
                             ):
                                 tmp_value = random.choice(tmp_dictCustomData_this[key_this]['value'].split('*'))
                                 for tmp_value_this in tmp_value.split('[分页]'):
-                                    msg = ChanceCustom.replyReg.replyValueRegTotal(
-                                        tmp_value_this,
-                                        valDict
-                                    )
+                                    msg = ChanceCustom.replyReg.replyValueRegTotal(tmp_value_this, valDict)
                                     if len(msg) > 0:
-                                        reply(
-                                            plugin_event,
-                                            msg
-                                        )
+                                        reply(plugin_event, msg)
                             break
 
     if bot_hash_last != None and valDict['innerVal']['replaceReply'] != None:
         tmp_value = random.choice(valDict['innerVal']['replaceReply'].split('*'))
         for tmp_value_this in tmp_value.split('[分页]'):
-            msg = ChanceCustom.replyReg.replyValueRegTotal(
-                tmp_value_this,
-                valDict
-            )
+            msg = ChanceCustom.replyReg.replyValueRegTotal(tmp_value_this, valDict)
             if len(msg) > 0:
-                reply(
-                    plugin_event,
-                    msg
-                )
+                reply(plugin_event, msg)
 
     setValDictUnity(valDict)
 
@@ -378,14 +344,17 @@ def codeDisEscape(data):
         res = res.replace(key_this[0], key_this[1])
     return res
 
+
 def codeEscape(data):
     res = data
     for key_this in ChanceCustom.replyReg.listRegTotalEscape:
         res = res.replace(key_this[0], key_this[1])
     return res
 
-def reply(plugin_event:OlivOS.API.Event, message:str):
+
+def reply(plugin_event: OlivOS.API.Event, message: str):
     plugin_event.reply(message)
 
-def send(plugin_event:OlivOS.API.Event, send_type:str, target_id:str, message:str, host_id:'str|None' = None):
-    plugin_event.send(send_type, target_id, message, host_id = host_id)
+
+def send(plugin_event: OlivOS.API.Event, send_type: str, target_id: str, message: str, host_id: 'str|None' = None):
+    plugin_event.send(send_type, target_id, message, host_id=host_id)

@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import platform
 from . import main
@@ -33,5 +33,5 @@ from . import replyOlivaDice
 from . import replyFilter
 from . import replyReg
 
-if(platform.system() == 'Windows'):
+if platform.system() == 'Windows':
     from . import GUI

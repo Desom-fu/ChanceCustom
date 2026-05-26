@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
@@ -19,9 +19,10 @@ import random
 
 import re
 
-def RangeNumFunTemp(flagPadding:bool = False):
+
+def RangeNumFunTemp(flagPadding: bool = False):
     def RangeNumFun(valDict):
-        def RangeNum_f(matched:'re.Match|dict'):
+        def RangeNum_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -30,10 +31,7 @@ def RangeNumFunTemp(flagPadding:bool = False):
             flagRight = True
             ChanceCustom.replyBase.getCharRaw(resDict, 'X', '0', groupDict)
             ChanceCustom.replyBase.getCharRaw(resDict, 'Y', None, groupDict)
-            resDict['X'] = ChanceCustom.replyReg.replyValueRegTotal(
-                resDict['X'],
-                valDict = valDict
-            )
+            resDict['X'] = ChanceCustom.replyReg.replyValueRegTotal(resDict['X'], valDict=valDict)
             if resDict['Y'] == None:
                 if '-' in resDict['X']:
                     try:
@@ -45,46 +43,48 @@ def RangeNumFunTemp(flagPadding:bool = False):
                 else:
                     flagRight = False
             else:
-                resDict['Y'] = ChanceCustom.replyReg.replyValueRegTotal(
-                    resDict['Y'],
-                    valDict = valDict
-                )
+                resDict['Y'] = ChanceCustom.replyReg.replyValueRegTotal(resDict['Y'], valDict=valDict)
                 try:
                     x = int(resDict['X'])
                     y = int(resDict['Y'])
                 except:
                     flagRight = False
             if flagRight:
-                res = str(random.randint(x,y))
+                res = str(random.randint(x, y))
                 if flagPadding:
                     res = res.zfill(len(str(y)))
             return res
+
         return RangeNum_f
+
     return RangeNumFun
+
 
 def RangeCharFunTemp():
     def RangeCharFun(valDict):
-        def RangeChar_f(matched:'re.Match|dict'):
+        def RangeChar_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             alphabet = 'AaBbCcDdEdFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789'
             res = random.choice(alphabet)
             return res
+
         return RangeChar_f
+
     return RangeCharFun
+
 
 def ChoiceOneSTRFunTemp():
     def ChoiceOneSTRFun(valDict):
-        def ChoiceOneSTR_f(matched:'re.Match|dict'):
+        def ChoiceOneSTR_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
             ChanceCustom.replyBase.getDataRaw(resDict, '...', None, groupDict)
             if None != resDict['...'] and len(resDict['...']) > 0:
                 resData_this = random.choice(resDict['...'])
-                res = ChanceCustom.replyReg.replyValueRegTotal(
-                    resData_this,
-                    valDict = valDict
-                )
+                res = ChanceCustom.replyReg.replyValueRegTotal(resData_this, valDict=valDict)
             return res
+
         return ChoiceOneSTR_f
+
     return ChoiceOneSTRFun

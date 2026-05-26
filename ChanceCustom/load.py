@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
@@ -38,30 +38,21 @@ defaultValTemp = {
     '一天上限': '本日已达上限',
     '一次间隔': '冷却中，还需等待【间隔】分钟',
     '回复间隔': '',
-    '权限限制': '权限不足'
+    '权限限制': '权限不足',
 }
 
-defaultValTempNone = {
-    '一月上限': '',
-    '一周上限': '',
-    '一天上限': '',
-    '一次间隔': '',
-    '回复间隔': '',
-    '权限限制': ''
-}
+defaultValTempNone = {'一月上限': '', '一周上限': '', '一天上限': '', '一次间隔': '', '回复间隔': '', '权限限制': ''}
+
 
 def releaseDir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 
+
 def initEmptyCustomData():
     global dictCustomData
-    dictCustomData = {
-        'dataVersion': dataVersion,
-        'data': {},
-        'defaultVar': {},
-        'ccpkList': {}
-    }
+    dictCustomData = {'dataVersion': dataVersion, 'data': {}, 'defaultVar': {}, 'ccpkList': {}}
+
 
 def initCheckCustomData():
     global dictCustomData
@@ -69,6 +60,7 @@ def initCheckCustomData():
         initEmptyCustomData()
     if 'dataVersion' not in dictCustomData:
         initEmptyCustomData()
+
 
 def fixCheckCustomData():
     global dictCustomData
@@ -84,14 +76,15 @@ def fixCheckCustomData():
     if 'ccpkList' not in dictCustomData:
         dictCustomData['ccpkList'] = {}
 
-def initCustomData(botInfo = None):
+
+def initCustomData(botInfo=None):
     global dictCustomData
     releaseDir('./plugin')
     releaseDir('./plugin/data')
     releaseDir('./plugin/data/ChanceCustom')
     dictCustomData_path = './plugin/data/ChanceCustom/custom.json'
     try:
-        with open(dictCustomData_path, 'r', encoding = 'utf-8') as dictCustomData_f:
+        with open(dictCustomData_path, 'r', encoding='utf-8') as dictCustomData_f:
             dictCustomData = json.loads(dictCustomData_f.read())
     except:
         initEmptyCustomData()
@@ -110,29 +103,33 @@ def initCustomData(botInfo = None):
         if tmp_hash_list_this == 'unity':
             for defaultValTemp_key in defaultValTemp:
                 if defaultValTemp_key not in dictCustomData['defaultVar'][tmp_hash_list_this]:
-                    dictCustomData['defaultVar'][tmp_hash_list_this][defaultValTemp_key] = defaultValTemp[defaultValTemp_key]
+                    dictCustomData['defaultVar'][tmp_hash_list_this][defaultValTemp_key] = defaultValTemp[
+                        defaultValTemp_key
+                    ]
         else:
             for defaultValTemp_key in defaultValTempNone:
                 if defaultValTemp_key not in dictCustomData['defaultVar'][tmp_hash_list_this]:
-                    dictCustomData['defaultVar'][tmp_hash_list_this][defaultValTemp_key] = defaultValTempNone[defaultValTemp_key]
+                    dictCustomData['defaultVar'][tmp_hash_list_this][defaultValTemp_key] = defaultValTempNone[
+                        defaultValTemp_key
+                    ]
         if tmp_hash_list_this not in dictCustomData['ccpkList']:
             dictCustomData['ccpkList'][tmp_hash_list_this] = {}
 
-def getCustomDataSortKeyList(data, reverse = False):
+
+def getCustomDataSortKeyList(data, reverse=False):
     tmp_sort_list = []
     tmp_res_list = []
     tmp_dictCustomData_data = data
     for tmp_dictCustomData_data_this in tmp_dictCustomData_data:
-        tmp_sort_list.append(
-            [
-                tmp_dictCustomData_data[tmp_dictCustomData_data_this]['key'],
-                tmp_dictCustomData_data[tmp_dictCustomData_data_this]['priority']
-            ]
-        )
-    tmp_sort_list.sort(key = lambda x : -x[1] if reverse else x[1])
+        tmp_sort_list.append([
+            tmp_dictCustomData_data[tmp_dictCustomData_data_this]['key'],
+            tmp_dictCustomData_data[tmp_dictCustomData_data_this]['priority'],
+        ])
+    tmp_sort_list.sort(key=lambda x: -x[1] if reverse else x[1])
     for tmp_sort_list_this in tmp_sort_list:
         tmp_res_list.append(tmp_sort_list_this[0])
     return tmp_res_list
+
 
 def saveCustomData():
     global dictCustomData
@@ -140,5 +137,5 @@ def saveCustomData():
     releaseDir('./plugin/data')
     releaseDir('./plugin/data/ChanceCustom')
     dictCustomData_path = './plugin/data/ChanceCustom/custom.json'
-    with open(dictCustomData_path, 'w', encoding = 'utf-8') as dictCustomData_f:
-        dictCustomData_f.write(json.dumps(obj = dictCustomData, ensure_ascii = False, indent = 4))
+    with open(dictCustomData_path, 'w', encoding='utf-8') as dictCustomData_f:
+        dictCustomData_f.write(json.dumps(obj=dictCustomData, ensure_ascii=False, indent=4))

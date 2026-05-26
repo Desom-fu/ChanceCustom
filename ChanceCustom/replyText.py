@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
@@ -20,15 +20,17 @@ import re
 import random
 from math import ceil
 
+
 def str2int(intStr, default=0):
     try:
         return int(intStr)
     except:
         return default
 
+
 def extractCharFunTemp(type):
     def extractCharFun(valDict):
-        def extractChar_f(matched:'re.Match|dict'):
+        def extractChar_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -58,10 +60,10 @@ def extractCharFunTemp(type):
                 res = str(len(resDict['被取文本']))
             elif type == 'left':
                 ChanceCustom.replyBase.getCharRegTotal(resDict, '取出长度', '0', groupDict, valDict)
-                res = resDict['被取文本'][:str2int(resDict['取出长度'])]
+                res = resDict['被取文本'][: str2int(resDict['取出长度'])]
             elif type == 'right':
                 ChanceCustom.replyBase.getCharRegTotal(resDict, '取出长度', '0', groupDict, valDict)
-                res = resDict['被取文本'][-str2int(resDict['取出长度']):]
+                res = resDict['被取文本'][-str2int(resDict['取出长度']) :]
             elif type == 'searchL':
                 ChanceCustom.replyBase.getCharRegTotal(resDict, '被寻内容', '', groupDict, valDict)
                 text = resDict['被取文本']
@@ -79,12 +81,15 @@ def extractCharFunTemp(type):
                 else:
                     res = text[:index]
             return res
+
         return extractChar_f
+
     return extractCharFun
+
 
 def toggleCaseFunTemp(type):
     def toggleCaseFun(valDict):
-        def toggleCase_f(matched:'re.Match|dict'):
+        def toggleCase_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -94,12 +99,15 @@ def toggleCaseFunTemp(type):
             elif type == 'lower':
                 res = resDict['转换文本'].lower()
             return res
+
         return toggleCase_f
+
     return toggleCaseFun
+
 
 def searchTextFunTemp(reversed=False):
     def searchTextFun(valDict):
-        def searchText_f(matched:'re.Match|dict'):
+        def searchText_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -108,30 +116,36 @@ def searchTextFunTemp(reversed=False):
             ChanceCustom.replyBase.getCharRegTotal(resDict, '开始位置', '1', groupDict, valDict)
             text = resDict['被寻文本']
             if not reversed:
-                res = str(text[str2int(resDict['开始位置']) - 1:].find(resDict['欲寻内容']) + 1)
+                res = str(text[str2int(resDict['开始位置']) - 1 :].find(resDict['欲寻内容']) + 1)
             else:
-                res = str(text[::-1][str2int(resDict['开始位置']) - 1:].find(resDict['欲寻内容'][::-1]) + 1)
+                res = str(text[::-1][str2int(resDict['开始位置']) - 1 :].find(resDict['欲寻内容'][::-1]) + 1)
             if res == '0':
                 res = '未找到指定内容'
             return res
+
         return searchText_f
+
     return searchTextFun
+
 
 def reverseTextFunTemp():
     def reverseTextFun(valDict):
-        def reverseText_f(matched:'re.Match|dict'):
+        def reverseText_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
             ChanceCustom.replyBase.getCharRegTotal(resDict, '反转文本', '', groupDict, valDict)
             res = resDict['反转文本'][::-1]
             return res
+
         return reverseText_f
+
     return reverseTextFun
+
 
 def replaceTextFunTemp():
     def replaceTextFun(valDict):
-        def replaceText_f(matched:'re.Match|dict'):
+        def replaceText_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -144,13 +158,15 @@ def replaceTextFunTemp():
             endIndex = startIndex + str2int(resDict['替换长度'])
             res = text[:startIndex] + resDict['替换文本'] + text[endIndex:]
             return res
+
         return replaceText_f
+
     return replaceTextFun
 
 
 def textStripFunTemp():
     def textStripFun(valDict):
-        def textStrip_f(matched:'re.Match|dict'):
+        def textStrip_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -166,17 +182,20 @@ def textStripFunTemp():
             else:
                 res = text.strip()
             return res
+
         return textStrip_f
+
     return textStripFun
+
 
 def deleteLineFunTemp(type):
     def deleteLineFun(valDict):
-        def deleteLine_f(matched:'re.Match|dict'):
+        def deleteLine_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
             ChanceCustom.replyBase.getCharRegTotal(resDict, '被删文本', '', groupDict, valDict)
-            
+
             if type == 'blank':
                 str.isspace()
                 lines = resDict['被删文本'].split('\n')
@@ -195,15 +214,18 @@ def deleteLineFunTemp(type):
                 lines = resDict['被删文本'].split('\n')
                 startIndex = max(str2int(resDict['开头行序'], 1) - 1, 0)
                 endIndex = min(str2int(resDict['结尾行序'], 1) - 1, len(lines) - 1)
-                del lines[startIndex:endIndex+1]
+                del lines[startIndex : endIndex + 1]
                 res = '\n'.join(lines)
             return res
+
         return deleteLine_f
+
     return deleteLineFun
+
 
 def lineStripFunTemp():
     def lineStripFun(valDict):
-        def lineStrip_f(matched:'re.Match|dict'):
+        def lineStrip_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -219,12 +241,15 @@ def lineStripFunTemp():
             else:
                 res = '\n'.join(map(str.strip, text.split('\n')))
             return res
+
         return lineStrip_f
+
     return lineStripFun
+
 
 def replaceLineFunTemp():
     def replaceLineFun(valDict):
-        def replaceLine_f(matched:'re.Match|dict'):
+        def replaceLine_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -232,19 +257,22 @@ def replaceLineFunTemp():
             ChanceCustom.replyBase.getCharRegTotal(resDict, '开头行序', '1', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '结尾行序', '1', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '替换文本', '', groupDict, valDict)
-            
+
             lines = resDict['被替文本'].split('\n')
             startIndex = max(str2int(resDict['开头行序'], 1) - 1, 0)
             endIndex = min(str2int(resDict['结尾行序'], 1) - 1, len(lines) - 1)
-            lines[startIndex:endIndex+1] = resDict['替换文本'].split('\n')
+            lines[startIndex : endIndex + 1] = resDict['替换文本'].split('\n')
             res = '\n'.join(lines)
             return res
+
         return replaceLine_f
+
     return replaceLineFun
+
 
 def insertTextFunTemp():
     def insertTextFun(valDict):
-        def insertText_f(matched:'re.Match|dict'):
+        def insertText_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -259,12 +287,15 @@ def insertTextFunTemp():
             else:
                 res = resDict['被插文本']
             return res
+
         return insertText_f
+
     return insertTextFun
+
 
 def splitTextByLengthFunTemp():
     def splitTextByLengthFun(valDict):
-        def splitTextByLength_f(matched:'re.Match|dict'):
+        def splitTextByLength_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -275,17 +306,20 @@ def splitTextByLengthFunTemp():
                 limit = int(resDict['每行字数'])
                 text = resDict['被拆文本']
                 for i in range(ceil(len(text) // limit)):
-                    lines.append(text[limit*i:limit*(i+1)])
+                    lines.append(text[limit * i : limit * (i + 1)])
                 res = '\n'.join(lines)
             else:
                 res = resDict['被拆文本']
             return res
+
         return splitTextByLength_f
+
     return splitTextByLengthFun
+
 
 def concatTextFunTemp():
     def concatTextFun(valDict):
-        def concatText_f(matched:'re.Match|dict'):
+        def concatText_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -298,17 +332,20 @@ def concatTextFunTemp():
 
             concatedLines = [f'{line1}{symbol}{line2}' for line1, line2 in zip(lines1, lines2)]
             if len(concatedLines) < len(lines1):
-                concatedLines.extend(lines1[len(concatedLines):])
+                concatedLines.extend(lines1[len(concatedLines) :])
             elif len(concatedLines) < len(lines2):
-                concatedLines.extend(lines2[len(concatedLines):])
+                concatedLines.extend(lines2[len(concatedLines) :])
             res = '\n'.join(concatedLines)
             return res
+
         return concatText_f
+
     return concatTextFun
+
 
 def sortByFirstLetterFunTemp():
     def sortByFirstLetterFun(valDict):
-        def sortByFirstLetter_f(matched:'re.Match|dict'):
+        def sortByFirstLetter_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -321,12 +358,15 @@ def sortByFirstLetterFunTemp():
                 lines.sort()
             res = '\n'.join(lines)
             return res
+
         return sortByFirstLetter_f
+
     return sortByFirstLetterFun
+
 
 def reverseContentFunTemp(type):
     def reverseContentFun(valDict):
-        def reverseContent_f(matched:'re.Match|dict'):
+        def reverseContent_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -338,12 +378,15 @@ def reverseContentFunTemp(type):
                 lines.reverse()
             res = '\n'.join(lines)
             return res
+
         return reverseContent_f
+
     return reverseContentFun
+
 
 def splitTextByLinesFunTemp():
     def splitTextByLinesFun(valDict):
-        def splitTextByLines_f(matched:'re.Match|dict'):
+        def splitTextByLines_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -359,16 +402,19 @@ def splitTextByLinesFunTemp():
                     pages.append('\n'.join(page))
                     page = [line]
                 else:
-                    page.append(line) 
+                    page.append(line)
             pages.append('\n'.join(page))
             res = resDict['分页'].join(pages)
             return res
+
         return splitTextByLines_f
+
     return splitTextByLinesFun
+
 
 def retrieveTextByLineIndexFunTemp():
     def retrieveTextByLineIndexFun(valDict):
-        def retrieveTextByLineIndex_f(matched:'re.Match|dict'):
+        def retrieveTextByLineIndex_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -376,12 +422,12 @@ def retrieveTextByLineIndexFunTemp():
             ChanceCustom.replyBase.getCharRegTotal(resDict, '开头行序', '1', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '结尾行序', '1', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, '取出类型', '', groupDict, valDict)
-            
+
             lines = resDict['被取文本'].split('\n')
             startIndex = max(str2int(resDict['开头行序'], 1) - 1, 0)
             endIndex = min(str2int(resDict['结尾行序'], 1), len(lines) - 1)
             retrieveType = resDict['取出类型']
-            if  retrieveType == '[取出所有]':
+            if retrieveType == '[取出所有]':
                 res = '\n'.join(lines[startIndex:endIndex])
             elif retrieveType.startswith('[随机取'):
                 if retrieveType[4:] == '出]':
@@ -389,12 +435,15 @@ def retrieveTextByLineIndexFunTemp():
                 else:
                     res = '\n'.join(random.sample(lines, str2int(retrieveType[4:-1], 1)))
             elif retrieveType[3] == '前':
-                res = '\n'.join(lines[startIndex:startIndex + str2int(retrieveType[4:-1], 0)])
+                res = '\n'.join(lines[startIndex : startIndex + str2int(retrieveType[4:-1], 0)])
             elif retrieveType[3] == '后':
-                res = '\n'.join(lines[endIndex - str2int(retrieveType[4:-1], 0):endIndex])    
+                res = '\n'.join(lines[endIndex - str2int(retrieveType[4:-1], 0) : endIndex])
             return res
+
         return retrieveTextByLineIndex_f
+
     return retrieveTextByLineIndexFun
+
 
 def addTextForEachLineFunTemp():
     def insertIntoStrHelperFun(pattern, text, type):
@@ -412,9 +461,11 @@ def addTextForEachLineFunTemp():
             else:
                 index = str2int(pattern, 1) - 1
             return string[:index] + text + string[index:]
+
         return insertIntoStr
+
     def addTextForEachLineFun(valDict):
-        def addTextForEachLine_f(matched:'re.Match|dict'):
+        def addTextForEachLine_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -433,10 +484,13 @@ def addTextForEachLineFunTemp():
                 res = '\n'.join(map(insertIntoStrHelperFun(pattern, resDict['添加文本'], 'des'), lines))
             elif addType == '[某位置前]':
                 pattern = resDict['添加参数']
-                res = '\n'.join(map(insertIntoStrHelperFun(pattern, resDict['添加文本'], 'order'), lines))  
+                res = '\n'.join(map(insertIntoStrHelperFun(pattern, resDict['添加文本'], 'order'), lines))
             return res
+
         return addTextForEachLine_f
+
     return addTextForEachLineFun
+
 
 def replaceTextForEachLineFunTemp():
     def replaceStrHelperFun(patternL, patternR, text, type):
@@ -461,9 +515,11 @@ def replaceTextForEachLineFunTemp():
                 leftIndex = max(str2int(patternL, 1), 0)
                 rightIndex = str2int(patternR, 1) - 1
             return string[:leftIndex] + text + string[rightIndex:]
+
         return replaceStr
+
     def replaceTextForEachLineFun(valDict):
-        def replaceTextForEachLine_f(matched:'re.Match|dict'):
+        def replaceTextForEachLine_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -479,26 +535,34 @@ def replaceTextForEachLineFunTemp():
             if addType == '[文本之间]':
                 res = '\n'.join(map(replaceStrHelperFun(patternLeft, patternRight, resDict['替换文本'], 'mid'), lines))
             elif addType == '[位置之间]':
-                res = '\n'.join(map(replaceStrHelperFun(patternLeft, patternRight, resDict['替换文本'], 'index'), lines))
+                res = '\n'.join(
+                    map(replaceStrHelperFun(patternLeft, patternRight, resDict['替换文本'], 'index'), lines)
+                )
             elif addType == '[文本前后]':
                 res = '\n'.join(map(replaceStrHelperFun(patternLeft, patternRight, resDict['替换文本'], 'edge'), lines))
             return res
+
         return replaceTextForEachLine_f
+
     return replaceTextForEachLineFun
+
 
 def hideResultFunTemp():
     def hideResultFun(valDict):
-        def hideResult_f(matched:'re.Match|dict'):
+        def hideResult_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
             return res
+
         return hideResult_f
+
     return hideResultFun
+
 
 def splitAndSelectFunTemp():
     def splitAndSelectFun(valDict):
-        def splitAndSelect_f(matched:'re.Match|dict'):
+        def splitAndSelect_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -515,17 +579,21 @@ def splitAndSelectFunTemp():
             else:
                 res = splited_text[max(selectType, -len(splited_text))]
             return res
+
         return splitAndSelect_f
+
     return splitAndSelectFun
 
+
 def roundNumberFunTemp():
-    def str2float(floatStr, default=.0):
+    def str2float(floatStr, default=0.0):
         try:
             return float(floatStr)
         except:
             return default
+
     def roundNumberFun(valDict):
-        def roundNumber_f(matched:'re.Match|dict'):
+        def roundNumber_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -537,12 +605,15 @@ def roundNumberFunTemp():
             val = max(min(str2float(resDict['数值']), upperBound), lowerBound)
             res = str(int(val)) if val == int(val) else str(val)
             return res
+
         return roundNumber_f
+
     return roundNumberFun
+
 
 def filterNumberFunTemp():
     def filterNumberFun(valDict):
-        def filterNumber_f(matched:'re.Match|dict'):
+        def filterNumber_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -553,16 +624,19 @@ def filterNumberFunTemp():
                     numbers.append(c)
             res = ''.join(numbers)
             return res
+
         return filterNumber_f
+
     return filterNumberFun
+
 
 def selectMiddleFunTemp():
     def selectMiddleFun(valDict):
-        def selectMiddle_f(matched:'re.Match|dict'):
+        def selectMiddle_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
-            
+
             ChanceCustom.replyBase.getCharRegTotal(resDict, 'XX1', '', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, 'XX2', '', groupDict, valDict)
             ChanceCustom.replyBase.getCharRegTotal(resDict, 'XX3', '', groupDict, valDict)
@@ -585,7 +659,7 @@ def selectMiddleFunTemp():
                 delimeter = selectType[3:]
                 if delimeter == '':
                     for i, candidate in enumerate(candidates):
-                        res += f'{i+1}.{candidate} '
+                        res += f'{i + 1}.{candidate} '
                     res = res[:-1]
                 else:
                     res = delimeter.join(candidates)
@@ -594,14 +668,17 @@ def selectMiddleFunTemp():
                 res = ' '.join(candidates[:limit])
             elif selectType.startswith('bot'):
                 limit = str2int(selectType[3:], 1)
-                res = ' '.join(candidates[-limit:]) 
+                res = ' '.join(candidates[-limit:])
             return res
+
         return selectMiddle_f
+
     return selectMiddleFun
+
 
 def regExpRefactorFunTemp():
     def regExpRefactorFun(valDict):
-        def regExpRefactor_f(matched:'re.Match|dict'):
+        def regExpRefactor_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -622,12 +699,15 @@ def regExpRefactorFunTemp():
             else:
                 res = match.group()
             return res
+
         return regExpRefactor_f
+
     return regExpRefactorFun
+
 
 def regExpReplaceFunTemp():
     def regExpReplaceFun(valDict):
-        def regExpReplace_f(matched:'re.Match|dict'):
+        def regExpReplace_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -641,7 +721,7 @@ def regExpReplaceFunTemp():
             new_exp = resDict['替换文本']
             selectType = resDict['序次']
 
-            if new_exp is None: 
+            if new_exp is None:
                 if len(matched_items) == 0:
                     res = ''
                 elif selectType == '':
@@ -652,7 +732,7 @@ def regExpReplaceFunTemp():
                     delimeter = selectType[3:]
                     if delimeter == '':
                         for i, item in enumerate(matched_items):
-                            res += f'{i+1}.{item} '
+                            res += f'{i + 1}.{item} '
                         res = res[:-1]
                     else:
                         res = delimeter.join(matched_items)
@@ -665,12 +745,15 @@ def regExpReplaceFunTemp():
             else:
                 res = re.sub(pattern, new_exp, text, count=max(0, str2int(resDict['序次'])))
             return res
+
         return regExpReplace_f
+
     return regExpReplaceFun
+
 
 def subRegExpFunTemp():
     def subRegExpFun(valDict):
-        def subRegExp_f(matched:'re.Match|dict'):
+        def subRegExp_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -693,12 +776,15 @@ def subRegExpFunTemp():
                 else:
                     res = sub_matches[0]
             return res
+
         return subRegExp_f
+
     return subRegExpFun
+
 
 def deleteTextFunTemp():
     def deleteTextFun(valDict):
-        def deleteText_f(matched:'re.Match|dict'):
+        def deleteText_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -709,12 +795,15 @@ def deleteTextFunTemp():
             pattern = re.compile(resDict['删除文本开头'] + '.*?' + resDict['删除文本结尾'])
             res = re.sub(pattern, '', text, count=0)
             return res
+
         return deleteText_f
+
     return deleteTextFun
+
 
 def switchAndReturnFunTemp():
     def switchAndReturnFun(valDict):
-        def switchAndReturn_f(matched:'re.Match|dict'):
+        def switchAndReturn_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -723,7 +812,7 @@ def switchAndReturnFunTemp():
             case = resDict['序号或逻辑组']
             cases = resDict['...']
             if None == case or None == cases or 0 == len(cases):
-            # if not any([case,cases,len(case)]):
+                # if not any([case,cases,len(case)]):
                 res = ''
             elif case.find('||') != -1:
                 logic_exps = case.split('||')
@@ -739,12 +828,15 @@ def switchAndReturnFunTemp():
                 res = cases[max(min(str2int(case) - 1, len(cases)), 0)]
             res = ChanceCustom.replyReg.replyValueRegTotal(res, valDict)
             return res
+
         return switchAndReturn_f
+
     return switchAndReturnFun
+
 
 def replaceFunTemp():
     def replaceFun(valDict):
-        def replace_f(matched:'re.Match|dict'):
+        def replace_f(matched: 're.Match|dict'):
             groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
             res = ''
             resDict = {}
@@ -801,5 +893,7 @@ def replaceFunTemp():
                             break
                     res = text
             return res
+
         return replace_f
+
     return replaceFun

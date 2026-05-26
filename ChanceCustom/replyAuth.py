@@ -1,4 +1,4 @@
-'''
+"""
 _________ ___________________ ____  __.
 \_   ___ \\_   ___ \______   \    |/ _|
 /    \  \//    \  \/|     ___/      <  
@@ -11,7 +11,7 @@ _________ ___________________ ____  __.
 @License   :   AGPL
 @Copyright :   (C) 2020-2022, OlivOS-Team
 @Desc      :   None
-'''
+"""
 
 import OlivOS
 import ChanceCustom
@@ -21,17 +21,22 @@ import time
 import hashlib
 import uuid
 
-from typing import Optional,Callable
+from typing import Optional, Callable
 
 
-def set_group_ban(plugin_event:OlivOS.API.Event, 
-    group_id: 'str|int', user_id: 'str|int', 
-    host_id: 'str|int|None' = None,duration: int = 1800):
-    plugin_event.set_group_ban(group_id, user_id,host_id, duration=duration)
+def set_group_ban(
+    plugin_event: OlivOS.API.Event,
+    group_id: 'str|int',
+    user_id: 'str|int',
+    host_id: 'str|int|None' = None,
+    duration: int = 1800,
+):
+    plugin_event.set_group_ban(group_id, user_id, host_id, duration=duration)
+
 
 @CurryTemp
-def set_group_ban_matcher(matched:'re.Match|dict',**kwargs):
-    valDict = kwargs["valDict"]
+def set_group_ban_matcher(matched: 're.Match|dict', **kwargs):
+    valDict = kwargs['valDict']
     groupDict = ChanceCustom.replyBase.getGroupDictInit(matched)
     resDict = {}
 
@@ -39,10 +44,12 @@ def set_group_ban_matcher(matched:'re.Match|dict',**kwargs):
     ChanceCustom.replyBase.getNumRegTotal(resDict, 'QQ', valDict['defaultVal']['发送者QQ'], groupDict, valDict)
 
     try:
-        set_group_ban(plugin_event=valDict['innerVal']['plugin_event'],
+        set_group_ban(
+            plugin_event=valDict['innerVal']['plugin_event'],
             group_id=valDict['defaultVal']['当前群号'],
             user_id=resDict['QQ'],
-            duration=resDict['时间'])
+            duration=resDict['时间'],
+        )
     except:
-        print("？",flush=True)
-    return ""
+        print('？', flush=True)
+    return ''
